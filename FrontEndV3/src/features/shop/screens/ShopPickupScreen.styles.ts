@@ -1,0 +1,201 @@
+import { StyleSheet } from 'react-native';
+import { colors, spacing, radius } from '../../../shared/theme';
+
+const styles = StyleSheet.create({
+  page: {
+    paddingTop: spacing.xxl,
+    paddingBottom: spacing.section,
+    gap: spacing.xl,
+  },
+  center: {
+    minHeight: 440,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: spacing.lg,
+  },
+  backLink: {
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  backText: {
+    color: colors.primary,
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  heading: { gap: spacing.sm },
+  eyebrow: {
+    color: colors.eco,
+    fontSize: 11,
+    fontWeight: '800',
+    letterSpacing: 1.3,
+  },
+  title: {
+    color: colors.text,
+    fontSize: 29,
+    fontWeight: '800',
+  },
+  muted: {
+    fontSize: 13,
+    color: colors.textSecondary,
+    lineHeight: 22,
+  },
+  panel: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    backgroundColor: colors.surface,
+    padding: spacing.xl,
+    gap: spacing.lg,
+  },
+  panelTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    gap: spacing.md,
+    alignItems: 'flex-start',
+  },
+  flex: { flex: 1, gap: spacing.xs },
+  smallLabel: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: colors.textMuted,
+  },
+  orderCode: {
+    fontSize: 17,
+    fontWeight: '800',
+    color: colors.text,
+  },
+  statusBadge: {
+    backgroundColor: colors.surfaceMuted,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    borderRadius: radius.pill,
+  },
+  completedBadge: { backgroundColor: '#EAF6E4' },
+  statusText: {
+    fontSize: 12,
+    color: colors.textSecondary,
+    fontWeight: '700',
+  },
+  completedText: { color: colors.eco },
+  divider: {
+    height: 1,
+    backgroundColor: colors.border,
+  },
+  infoLine: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: spacing.md,
+    flexWrap: 'wrap',
+  },
+  infoLabel: {
+    fontSize: 13,
+    color: colors.textSecondary,
+  },
+  infoValue: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: colors.text,
+  },
+  sectionTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  sectionTitle: {
+    fontSize: 19,
+    fontWeight: '800',
+    color: colors.text,
+  },
+  field: { gap: spacing.sm },
+  label: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: colors.text,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.sm,
+    backgroundColor: colors.surface,
+    paddingHorizontal: spacing.md,
+    minHeight: 49,
+    fontSize: 16,
+    fontWeight: '700',
+    letterSpacing: 1.1,
+    color: colors.text,
+  },
+  helper: {
+    fontSize: 12,
+    color: colors.textMuted,
+  },
+  warningBox: {
+    flexDirection: 'row',
+    gap: spacing.md,
+    padding: spacing.lg,
+    borderRadius: radius.sm,
+    backgroundColor: colors.surfaceMuted,
+  },
+  warningText: {
+    flex: 1,
+    fontSize: 13,
+    lineHeight: 21,
+    color: colors.textSecondary,
+  },
+  successBox: {
+    flexDirection: 'row',
+    gap: spacing.md,
+    padding: spacing.lg,
+    borderRadius: radius.sm,
+    backgroundColor: '#EAF6E4',
+    alignItems: 'center',
+  },
+  successText: {
+    flex: 1,
+    fontSize: 14,
+    lineHeight: 22,
+    fontWeight: '700',
+    color: colors.eco,
+  },
+  errorBox: {
+    backgroundColor: colors.surfaceMuted,
+    borderRadius: radius.md,
+    padding: spacing.lg,
+    gap: spacing.md,
+  },
+  errorText: {
+    color: colors.danger,
+    fontSize: 13,
+    lineHeight: 21,
+  },
+  messageBox: {
+    backgroundColor: colors.surfaceMuted,
+    borderRadius: radius.sm,
+    padding: spacing.md,
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(15, 23, 42, 0.45)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: spacing.xl,
+  },
+  modalPanel: {
+    width: '100%',
+    maxWidth: 460,
+    backgroundColor: colors.surface,
+    padding: spacing.xxl,
+    borderRadius: radius.md,
+    gap: spacing.xl,
+  },
+  modalActions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    flexWrap: 'wrap',
+    gap: spacing.md,
+  },
+});
+
+export default styles;
