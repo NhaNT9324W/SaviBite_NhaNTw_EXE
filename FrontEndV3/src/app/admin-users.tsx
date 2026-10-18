@@ -1,4 +1,4 @@
-
+import { requireAccess } from '../features/auth/components/requireAccess';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
@@ -311,7 +311,7 @@ function InfoRow({
   );
 }
 
-export default function AdminUsersScreen() {
+function AdminUsersScreen() {
   const router = useRouter();
 
   const {
@@ -1729,3 +1729,5 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
 });
+
+export default requireAccess(AdminUsersScreen, 'admin');

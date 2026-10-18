@@ -1,4 +1,4 @@
-
+import { requireAccess } from '../features/auth/components/requireAccess';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import {
@@ -451,7 +451,7 @@ function Tool({
   );
 }
 
-export default function ShopOrdersScreen() {
+function ShopOrdersScreen() {
   const router = useRouter();
 
   const {
@@ -1428,3 +1428,5 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
 });
+
+export default requireAccess(ShopOrdersScreen, 'login');

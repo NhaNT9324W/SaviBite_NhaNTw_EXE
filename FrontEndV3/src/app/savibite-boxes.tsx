@@ -1,4 +1,4 @@
-
+import { requireAccess } from '../features/auth/components/requireAccess';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -596,7 +596,7 @@ function DateTimeField({
   );
 }
 
-export default function SaviBiteBoxesScreen() {
+function SaviBiteBoxesScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ shopId?: string }>();
   const { status, getAccessToken } = useAuth();
@@ -2300,3 +2300,5 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
 });
+
+export default requireAccess(SaviBiteBoxesScreen, 'login');

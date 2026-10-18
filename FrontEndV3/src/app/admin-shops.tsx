@@ -1,4 +1,4 @@
-
+import { requireAccess } from '../features/auth/components/requireAccess';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import {
@@ -436,7 +436,7 @@ function Field({
   );
 }
 
-export default function AdminShopsScreen() {
+function AdminShopsScreen() {
   const router = useRouter();
 
   const {
@@ -1911,3 +1911,5 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
 });
+
+export default requireAccess(AdminShopsScreen, 'admin');

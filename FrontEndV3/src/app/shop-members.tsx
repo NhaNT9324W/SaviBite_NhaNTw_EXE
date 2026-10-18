@@ -1,4 +1,4 @@
-
+import { requireAccess } from '../features/auth/components/requireAccess';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
@@ -433,7 +433,7 @@ function MemberCard({
   );
 }
 
-export default function ShopMembersScreen() {
+function ShopMembersScreen() {
   const router = useRouter();
 
   const params = useLocalSearchParams<{
@@ -1510,3 +1510,5 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
 });
+
+export default requireAccess(ShopMembersScreen, 'login');

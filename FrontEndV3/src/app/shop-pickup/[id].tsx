@@ -1,4 +1,4 @@
-
+import { requireAccess } from '../../features/auth/components/requireAccess';
 import { Ionicons } from '@expo/vector-icons';
 import * as Crypto from 'expo-crypto';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -195,7 +195,7 @@ async function parseResponse(
   return unwrap(json);
 }
 
-export default function ShopPickupScreen() {
+function ShopPickupScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{
     id?: string;
@@ -903,3 +903,5 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
 });
+
+export default requireAccess(ShopPickupScreen, 'login');

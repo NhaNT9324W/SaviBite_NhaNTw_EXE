@@ -1,4 +1,4 @@
-
+import { requireAccess } from '../features/auth/components/requireAccess';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -730,7 +730,7 @@ function FormField({
   );
 }
 
-export default function FlashSalesScreen() {
+function FlashSalesScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ shopId?: string }>();
   const { status, getAccessToken } = useAuth();
@@ -2292,3 +2292,5 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
 });
+
+export default requireAccess(FlashSalesScreen, 'login');

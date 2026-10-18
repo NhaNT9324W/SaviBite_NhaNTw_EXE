@@ -1,4 +1,4 @@
-
+import { requireAccess } from '../features/auth/components/requireAccess';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -514,7 +514,7 @@ async function createImageUri(response: Response): Promise<string> {
   });
 }
 
-export default function AdminRefundsScreen() {
+function AdminRefundsScreen() {
   const router = useRouter();
   const { status, user, getAccessToken } = useAuth();
 
@@ -1959,3 +1959,5 @@ const styles = StyleSheet.create({
     maxHeight: 490,
   },
 });
+
+export default requireAccess(AdminRefundsScreen, 'admin');

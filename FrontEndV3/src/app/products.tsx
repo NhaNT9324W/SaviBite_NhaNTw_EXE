@@ -1,4 +1,4 @@
-
+import { requireAccess } from '../features/auth/components/requireAccess';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -442,7 +442,7 @@ function FormField({
   );
 }
 
-export default function ProductsScreen() {
+function ProductsScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ shopId?: string }>();
   const { width } = useWindowDimensions();
@@ -1916,3 +1916,5 @@ const styles = StyleSheet.create({
     lineHeight: 21,
   },
 });
+
+export default requireAccess(ProductsScreen, 'login');
