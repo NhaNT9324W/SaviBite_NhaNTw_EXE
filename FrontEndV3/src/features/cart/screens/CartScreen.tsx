@@ -1,4 +1,4 @@
-
+import { formatVnd as money } from '../../../shared/utils/formatters';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
@@ -20,12 +20,7 @@ import { colors, layout, radius, spacing } from '../../../shared/theme';
 import { useCart } from '../context/CartProvider';
 import type { CartItem } from '../types/cart.types';
 
-const money = (value: number) =>
-  new Intl.NumberFormat('vi-VN', {
-    style: 'currency',
-    currency: 'VND',
-    maximumFractionDigits: 0,
-  }).format(value);
+
 
 function CartProductRow({
   item,
@@ -437,7 +432,7 @@ const styles = StyleSheet.create({
   page: {
     paddingTop: spacing.xxxl,
     paddingBottom: spacing.section,
-    gap: spacing.xxl,
+    gap: spacing.xl,
   },
   heading: {
     flexDirection: 'row',
@@ -453,6 +448,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: '800',
     color: colors.text,
+    letterSpacing: -0.7,
   },
   subtitle: {
     fontSize: 14,
@@ -484,7 +480,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: radius.md,
+    borderRadius: radius.lg,
     padding: spacing.lg,
     flexDirection: 'row',
     alignItems: 'center',
@@ -507,7 +503,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: radius.md,
+    borderRadius: radius.lg,
     padding: spacing.lg,
   },
   productRow: {
@@ -520,7 +516,7 @@ const styles = StyleSheet.create({
     width: 92,
     height: 92,
     backgroundColor: colors.surfaceMuted,
-    borderRadius: radius.sm,
+    borderRadius: radius.md,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
@@ -543,6 +539,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     color: colors.text,
+    lineHeight: 24,
   },
   price: {
     fontSize: 17,
@@ -615,9 +612,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: radius.md,
+    borderRadius: radius.lg,
     padding: spacing.xl,
     gap: spacing.lg,
+    shadowColor: colors.text,
+    shadowOpacity: 0.055,
+    shadowRadius: 18,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 2,
   },
   summaryTitle: {
     fontSize: 19,
@@ -648,6 +650,7 @@ const styles = StyleSheet.create({
     fontSize: 23,
     fontWeight: '800',
     color: colors.primary,
+    letterSpacing: -0.5,
   },
   warning: {
     flexDirection: 'row',
@@ -708,7 +711,7 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 440,
     backgroundColor: colors.surface,
-    borderRadius: radius.md,
+    borderRadius: radius.lg,
     padding: spacing.xxl,
     gap: spacing.lg,
   },

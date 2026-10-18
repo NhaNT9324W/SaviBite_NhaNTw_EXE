@@ -1,4 +1,4 @@
-
+import { formatVnd as formatMoney } from '../../../shared/utils/formatters';
 import { Ionicons } from '@expo/vector-icons';
 import * as Crypto from 'expo-crypto';
 import { useRouter } from 'expo-router';
@@ -30,12 +30,7 @@ import type {
     CreateOrderRequest,
 } from '../../orders/types/order.types';
 
-const formatMoney = (value: number) =>
-  new Intl.NumberFormat('vi-VN', {
-    style: 'currency',
-    currency: 'VND',
-    maximumFractionDigits: 0,
-  }).format(value);
+
 
 function Field({
   label,
@@ -572,6 +567,7 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontSize: 29,
     fontWeight: '800',
+    letterSpacing: -0.6,
   },
   muted: {
     color: colors.textSecondary,
@@ -598,11 +594,16 @@ const styles = StyleSheet.create({
   },
   panel: {
     backgroundColor: colors.surface,
-    borderRadius: radius.md,
+    borderRadius: radius.lg,
     borderWidth: 1,
     borderColor: colors.border,
     padding: spacing.xl,
     gap: spacing.lg,
+    shadowColor: colors.text,
+    shadowOpacity: 0.04,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 5 },
+    elevation: 1,
   },
   sectionHeading: {
     flexDirection: 'row',
@@ -613,6 +614,7 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontSize: 19,
     fontWeight: '800',
+    letterSpacing: -0.3,
   },
   field: {
     gap: spacing.sm,
@@ -628,7 +630,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: radius.sm,
+    borderRadius: radius.md,
     fontSize: 14,
     color: colors.text,
     backgroundColor: colors.surface,
@@ -704,6 +706,7 @@ const styles = StyleSheet.create({
     fontSize: 23,
     fontWeight: '800',
     color: colors.primary,
+    letterSpacing: -0.5,
   },
   errorBox: {
     flexDirection: 'row',

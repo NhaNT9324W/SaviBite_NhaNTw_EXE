@@ -36,6 +36,7 @@ export default function OfferCard({
   style,
 }: OfferCardProps) {
   const isFlashSale = offer.offerType === 'FLASH_SALE';
+  const soldOut = offer.availableQuantity <= 0;
 
   const discount =
     offer.originalValue > 0
@@ -50,12 +51,15 @@ export default function OfferCard({
   return (
     <Pressable
       onPress={onPress}
-      disabled={!onPress}
+      disabled={!onPress || soldOut}
+      accessibilityLabel={`${offer.title}, ${offer.shopName}, ${money.format(offer.salePrice)}${soldOut ? ", đã hết suất" : `, còn ${offer.availableQuantity} suất`}`}
+      accessibilityState={{ disabled: !onPress || soldOut }}
       accessibilityRole={onPress ? 'button' : undefined}
       style={({ pressed }) => [
         styles.card,
         style,
         pressed && styles.pressed,
+        soldOut && styles.soldOut,
       ]}
     >
       <View style={styles.imagePlaceholder}>
@@ -127,11 +131,11 @@ export default function OfferCard({
               color={colors.textMuted}
             />
             <Text style={styles.stockText}>
-              Còn {offer.availableQuantity} suất
+              {soldOut ? 'Đã hết suất' : `Còn ${offer.availableQuantity} suất`}
             </Text>
           </View>
 
-          {onPress && (
+          {onPress && !soldOut && (
             <Ionicons
               name="arrow-forward"
               size={18}
@@ -155,6 +159,7 @@ const styles = StyleSheet.create({
   pressed: {
     opacity: 0.88,
   },
+  soldOut: { opacity: 0.65 },
   imagePlaceholder: {
     height: 155,
     backgroundColor: colors.surfaceMuted,
@@ -233,3 +238,5 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
   },
 });
+
+

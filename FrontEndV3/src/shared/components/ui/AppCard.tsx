@@ -61,6 +61,11 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     borderRadius: radius.lg,
     overflow: 'hidden',
+    shadowColor: colors.text,
+    shadowOpacity: 0.055,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 5 },
+    elevation: 2,
   },
   pressed: {
     opacity: 0.88,

@@ -981,6 +981,7 @@ const styles = StyleSheet.create({
     fontSize: 29,
     fontWeight: '800',
     color: colors.text,
+    letterSpacing: -0.6,
   },
   orderCode: {
     fontSize: 14,
@@ -1001,10 +1002,15 @@ const styles = StyleSheet.create({
   panel: {
     backgroundColor: colors.surface,
     padding: spacing.xl,
-    borderRadius: radius.md,
+    borderRadius: radius.lg,
     borderWidth: 1,
     borderColor: colors.border,
     gap: spacing.lg,
+    shadowColor: colors.text,
+    shadowOpacity: 0.04,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 5 },
+    elevation: 1,
   },
   sectionHeading: {
     flexDirection: 'row',
@@ -1015,6 +1021,7 @@ const styles = StyleSheet.create({
     fontSize: 19,
     fontWeight: '800',
     color: colors.text,
+    letterSpacing: -0.3,
   },
   detailRow: {
     flexDirection: 'row',
@@ -1064,7 +1071,7 @@ const styles = StyleSheet.create({
     padding: spacing.xl,
     gap: spacing.md,
     backgroundColor: colors.surfaceMuted,
-    borderRadius: radius.md,
+    borderRadius: radius.lg,
     borderWidth: 1,
     borderColor: colors.border,
   },
@@ -1078,7 +1085,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: '800',
     color: colors.primary,
-    letterSpacing: 3,
+    letterSpacing: 2,
     textAlign: 'center',
   },
   successText: {

@@ -1,4 +1,4 @@
-
+import { formatVnd as money } from '../../../shared/utils/formatters';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -22,12 +22,7 @@ import { useCart } from '../../cart/context/CartProvider';
 import type { CartAddInput } from '../../cart/types/cart.types';
 import { useOfferDetail } from '../hooks/useOfferDetail';
 
-const money = (value: number) =>
-  new Intl.NumberFormat('vi-VN', {
-    style: 'currency',
-    currency: 'VND',
-    maximumFractionDigits: 0,
-  }).format(value);
+
 
 function formatDate(value: string) {
   const date = new Date(value);
@@ -768,12 +763,12 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   purchaseColumnDesktop: {
-    width: 370,
+    width: 360,
   },
   imageContainer: {
     height: 330,
     backgroundColor: colors.surfaceMuted,
-    borderRadius: radius.md,
+    borderRadius: radius.lg,
     overflow: 'hidden',
   },
   image: {
@@ -790,9 +785,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: radius.md,
+    borderRadius: radius.lg,
     padding: spacing.xl,
     gap: spacing.lg,
+    shadowColor: colors.text,
+    shadowOpacity: 0.04,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 5 },
+    elevation: 1,
   },
   sectionTitle: {
     color: colors.text,
@@ -842,6 +842,7 @@ const styles = StyleSheet.create({
     fontSize: 23,
     fontWeight: '800',
     lineHeight: 31,
+    letterSpacing: -0.6,
   },
   priceRow: {
     flexDirection: 'row',
@@ -853,6 +854,7 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontSize: 28,
     fontWeight: '800',
+    letterSpacing: -0.8,
   },
   oldPrice: {
     color: colors.textMuted,
@@ -950,7 +952,7 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 480,
     padding: spacing.xxl,
-    borderRadius: radius.md,
+    borderRadius: radius.lg,
     backgroundColor: colors.surface,
     gap: spacing.lg,
   },

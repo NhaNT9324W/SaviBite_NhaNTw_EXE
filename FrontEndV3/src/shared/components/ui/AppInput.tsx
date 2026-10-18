@@ -102,10 +102,10 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    minHeight: 46,
+    minHeight: 50,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: radius.sm,
+    borderRadius: radius.md,
     backgroundColor: colors.surface,
     paddingHorizontal: spacing.base,
     paddingVertical: spacing.md,

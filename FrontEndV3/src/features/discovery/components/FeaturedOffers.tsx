@@ -10,6 +10,7 @@ import {
 
 import ScreenContainer from '../../../shared/components/layout/ScreenContainer';
 import AppButton from '../../../shared/components/ui/AppButton';
+import OfferFeedback from '../../../shared/components/ui/OfferFeedback';
 
 import {
     colors,
@@ -68,49 +69,11 @@ export default function FeaturedOffers() {
       </View>
 
       {loading ? (
-        <View style={styles.feedback}>
-          <ActivityIndicator
-            size="large"
-            color={colors.primary}
-          />
-
-          <Text style={styles.feedbackText}>
-            Đang tải ưu đãi...
-          </Text>
-        </View>
+        <OfferFeedback kind="loading" description="Đang tải ưu đãi..." />
       ) : error ? (
-        <View style={styles.feedback}>
-          <Text style={styles.errorTitle}>
-            Không thể tải danh sách ưu đãi
-          </Text>
-
-          <Text style={styles.feedbackText}>
-            {error}
-          </Text>
-
-          <AppButton
-            title="Thử lại"
-            variant="outline"
-            onPress={reload}
-          />
-        </View>
+        <OfferFeedback kind="error" title="Không thể tải danh sách ưu đãi" description={error} actionLabel="Thử lại" onAction={reload} />
       ) : !data?.items.length ? (
-        <View style={styles.feedback}>
-          <Text style={styles.emptyTitle}>
-            Chưa có ưu đãi đang mở bán
-          </Text>
-
-          <Text style={styles.feedbackText}>
-            Hiện chưa có ưu đãi phù hợp.
-            Hãy quay lại sau để khám phá món ngon mới.
-          </Text>
-
-          <AppButton
-            title="Khám phá ưu đãi"
-            variant="outline"
-            onPress={goToOffers}
-          />
-        </View>
+        <OfferFeedback kind="empty" title="Chưa có ưu đãi đang mở bán" description="Hiện chưa có ưu đãi phù hợp. Hãy quay lại sau để khám phá món ngon mới." actionLabel="Khám phá ưu đãi" onAction={goToOffers} />
       ) : (
         <View style={styles.grid}>
           {data.items.map((offer) => (
@@ -204,3 +167,5 @@ const styles = StyleSheet.create({
     color: colors.danger,
   },
 });
+
+

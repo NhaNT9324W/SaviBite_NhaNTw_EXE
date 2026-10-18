@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
   },
   hero: {
-    paddingTop: spacing.xxl,
+    paddingTop: spacing.xxxl,
     paddingBottom: spacing.xxxl,
     gap: spacing.xxl,
   },
@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
     fontSize: typography.fontSize.heading,
     fontWeight: '800',
     lineHeight: 40,
-    letterSpacing: -1,
+    letterSpacing: -0.9,
     color: colors.text,
   },
   heroHeadingDesktop: {
@@ -422,7 +422,7 @@ const styles = StyleSheet.create({
   section: {
     paddingTop: spacing.section,
     paddingBottom: spacing.section,
-    gap: spacing.xxl,
+    gap: spacing.xl,
   },
   sectionHeading: {
     gap: spacing.sm,
@@ -433,6 +433,7 @@ const styles = StyleSheet.create({
     lineHeight: 32,
     fontWeight: '800',
     color: colors.text,
+    letterSpacing: -0.5,
   },
   sectionSubtitle: {
     fontSize: 15,
@@ -452,8 +453,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: radius.md,
+    borderRadius: radius.lg,
     gap: spacing.md,
+    shadowColor: colors.text,
+    shadowOpacity: 0.045,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 1,
   },
   categoryTablet: {
     flex: 1,
@@ -473,6 +479,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     color: colors.text,
+    letterSpacing: -0.3,
   },
   categoryDescription: {
     fontSize: 14,

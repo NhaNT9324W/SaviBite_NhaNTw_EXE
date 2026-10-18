@@ -39,6 +39,7 @@ export function useOffers(
     async function loadOffers() {
       setLoading(true);
       setError(null);
+      setData(null);
 
       try {
         const result = await offerApi.getOffers(
@@ -78,3 +79,5 @@ export function useOffers(
     reload,
   };
 }
+
+
