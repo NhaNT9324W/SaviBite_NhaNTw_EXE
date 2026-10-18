@@ -12,6 +12,7 @@ import React, {
 import { useCart } from '../../cart/context/CartProvider';
 import { authApi, AuthApiError } from '../api/auth.api';
 import { tokenStorage } from '../services/tokenStorage';
+import { isAccessTokenValid, isRefreshTokenValid } from '../services/sessionExpiry';
 
 import type {
   AuthContextValue,
@@ -23,33 +24,7 @@ import type {
 const AuthContext =
   createContext<AuthContextValue | null>(null);
 
-const REFRESH_EARLY_MS = 60 * 1000;
 
-function isAccessTokenValid(
-  session: AuthSession
-): boolean {
-  const expiry = new Date(
-    session.accessTokenExpiresAt
-  ).getTime();
-
-  return (
-    Number.isFinite(expiry) &&
-    expiry > Date.now() + REFRESH_EARLY_MS
-  );
-}
-
-function isRefreshTokenValid(
-  session: AuthSession
-): boolean {
-  const expiry = new Date(
-    session.refreshTokenExpiresAt
-  ).getTime();
-
-  return (
-    Number.isFinite(expiry) &&
-    expiry > Date.now()
-  );
-}
 
 export function AuthProvider({
   children,

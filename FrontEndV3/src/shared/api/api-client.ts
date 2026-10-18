@@ -32,6 +32,7 @@ type ApiOptions = {
   accessToken?: string | null;
   signal?: AbortSignal;
   headers?: Record<string, string>;
+  allowNullData?: boolean;
 };
 
 /**
@@ -50,7 +51,7 @@ export async function apiRequest<T>(
     throw new ApiRequestError('ÄÆ°á»ng dáº«n API khÃ´ng há»£p lá»‡.', 0, 'INVALID_API_PATH');
   }
 
-  const { method = 'GET', body, accessToken, signal, headers } = options;
+  const { method = 'GET', body, accessToken, signal, headers, allowNullData = false } = options;
   let response: Response;
   try {
     response = await fetch(`${baseUrl}${path}`, {
@@ -87,6 +88,7 @@ export async function apiRequest<T>(
     );
   }
   if (envelope.data === undefined || envelope.data === null) {
+    if (allowNullData) return null as T;
     throw new ApiRequestError('API khÃ´ng tráº£ vá» dá»¯ liá»‡u.', response.status, 'EMPTY_RESPONSE');
   }
   return envelope.data;
