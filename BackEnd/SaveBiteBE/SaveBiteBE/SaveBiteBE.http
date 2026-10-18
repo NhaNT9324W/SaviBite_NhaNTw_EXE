@@ -1,0 +1,6 @@
+@SaveBiteBE_HostAddress = http://localhost:5122
+
+GET {{SaveBiteBE_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
