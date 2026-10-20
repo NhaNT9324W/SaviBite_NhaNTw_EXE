@@ -345,174 +345,102 @@ public static class DevelopmentDataSeeder
 
     private static readonly string[][] ProductImages =
     [
-        // Group 0 - Bánh ngọt & Bánh mì (30 ảnh)
+        // Group 0 - Bánh ngọt & Bánh mì (12 ảnh thực tế từ DOCX)
         [
-            "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&q=80",  // croissant
-            "https://images.unsplash.com/photo-1568471173242-461f0a730452?w=400&q=80",  // almond croissant
-            "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&q=80",  // egg tart
-            "https://images.unsplash.com/photo-1603532648955-039310d9ed75?w=400&q=80",  // cream puff
-            "https://images.unsplash.com/photo-1549931319-a545dcf3bc7c?w=400&q=80",  // cheese bread
-            "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=400&q=80",  // salted egg cake
-            "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=400&q=80",  // tiramisu
-            "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&q=80",  // mango mousse
-            "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=400&q=80",  // butter cookies
-            "https://images.unsplash.com/photo-1549931319-a545dcf3bc7c?w=400&q=80",  // milk bread
-            "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&q=80",  // roll cake
-            "https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?w=400&q=80",  // chocolate cake
-            "https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=400&q=80",  // banana bread
-            "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&q=80",  // wholegrain bread
-            "https://images.unsplash.com/photo-1568471173242-461f0a730452?w=400&q=80",  // apple pie
-            "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&q=80",  // honey croissant
-            "https://images.unsplash.com/photo-1549931319-a545dcf3bc7c?w=400&q=80",  // melted cheese bread
-            "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&q=80",  // lemon tart
-            "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&q=80",  // cream roll cake
-            "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=400&q=80",  // choco chip cookies
-            "https://images.unsplash.com/photo-1603532648955-039310d9ed75?w=400&q=80",  // matcha puff
-            "https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=400&q=80",  // oat banana bread
-            "https://images.unsplash.com/photo-1549931319-a545dcf3bc7c?w=400&q=80",  // garlic bread
-            "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&q=80",  // strawberry mousse
-            "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&q=80",  // grain bread
-            "https://images.unsplash.com/photo-1551024601-bec78aea704b?w=400&q=80",  // sugar donut
-            "https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?w=400&q=80",  // cheese cake
-            "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&q=80",  // strawberry tart
-            "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&q=80",  // cereal bread
-            "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&q=80"   // mini cream cake
+            "http://localhost:5122/uploads/products/tiramisu.png",
+            "http://localhost:5122/uploads/products/banh-kem-dau.png",
+            "http://localhost:5122/uploads/products/donut-socola.png",
+            "http://localhost:5122/uploads/products/donut-dau.png",
+            "http://localhost:5122/uploads/products/croissant-ngot.png",
+            "http://localhost:5122/uploads/products/cupcake-socola.png",
+            "http://localhost:5122/uploads/products/banh-su-kem.png",
+            "http://localhost:5122/uploads/products/banh-bong-lan-trung-muoi.png",
+            "http://localhost:5122/uploads/products/banh-mousse-chanh-day.png",
+            "http://localhost:5122/uploads/products/cheesecake.png",
+            "http://localhost:5122/uploads/products/banh-tart-trung.png",
+            "http://localhost:5122/uploads/products/brownie-socola.png"
         ],
-        // Group 1 - Cơm & Món chính (30 ảnh)
+        // Group 1 - Cơm, Món chính & Món chay (12 ảnh thực tế từ DOCX)
         [
-            "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&q=80",  // shredded chicken rice
-            "https://images.unsplash.com/photo-1529563021893-cc83c992d75d?w=400&q=80",  // grilled ribs rice
-            "https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400&q=80",  // braised pork rice
-            "https://images.unsplash.com/photo-1604152135912-04a022e23696?w=400&q=80",  // tomato fish rice
-            "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&q=80",  // fish sauce chicken rice
-            "https://images.unsplash.com/photo-1547592180-85f173990554?w=400&q=80",  // beef stir-fry rice
-            "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80",  // veggie rice
-            "https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400&q=80",  // seafood noodles
-            "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&q=80",  // grilled pork vermicelli
-            "https://images.unsplash.com/photo-1529563021893-cc83c992d75d?w=400&q=80",  // pork skin rice
-            "https://images.unsplash.com/photo-1604152135912-04a022e23696?w=400&q=80",  // braised fish rice
-            "https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400&q=80",  // grilled pork rice
-            "https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400&q=80",  // beef pasta stir-fry
-            "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&q=80",  // mushroom chicken rice
-            "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80",  // tofu mushroom rice
-            "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&q=80",  // mushroom sauce chicken
-            "https://images.unsplash.com/photo-1529563021893-cc83c992d75d?w=400&q=80",  // honey ribs rice
-            "https://images.unsplash.com/photo-1604152135912-04a022e23696?w=400&q=80",  // pepper braised fish
-            "https://images.unsplash.com/photo-1547592180-85f173990554?w=400&q=80",  // luc lac beef rice
-            "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80",  // veg tofu rice
-            "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&q=80",  // grilled chicken vermicelli
-            "https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400&q=80",  // beef veggie stir-fry
-            "https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400&q=80",  // coconut braised pork
-            "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&q=80",  // crispy chicken rice
-            "https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400&q=80",  // minced beef pasta
-            "https://images.unsplash.com/photo-1547592180-85f173990554?w=400&q=80",  // stir-fried shrimp rice
-            "https://images.unsplash.com/photo-1604152135912-04a022e23696?w=400&q=80",  // lemongrass fish rice
-            "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&q=80",  // spring roll vermicelli
-            "https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400&q=80",  // egg roll rice
-            "https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400&q=80"   // bolognese
+            "http://localhost:5122/uploads/products/com-chay-thap-cam.png",
+            "http://localhost:5122/uploads/products/com-chien-chay.png",
+            "http://localhost:5122/uploads/products/bun-xao-chay.png",
+            "http://localhost:5122/uploads/products/mi-xao-chay.png",
+            "http://localhost:5122/uploads/products/banh-mi-chay.png",
+            "http://localhost:5122/uploads/products/banh-bao-chay.png",
+            "http://localhost:5122/uploads/products/goi-cuon-chay.png",
+            "http://localhost:5122/uploads/products/salad-rau-cu.png",
+            "http://localhost:5122/uploads/products/dau-hu-sot-ca.png",
+            "http://localhost:5122/uploads/products/dau-hu-chien-sa.png",
+            "http://localhost:5122/uploads/products/ca-ri-chay.png",
+            "http://localhost:5122/uploads/products/bun-hue-chay.png"
         ],
-        // Group 2 - Cà phê & Đồ uống (30 ảnh)
+        // Group 2 - Cà phê & Đồ uống (12 ảnh thực tế từ DOCX)
         [
-            "https://images.unsplash.com/photo-1517959105821-eaf2591984d2?w=400&q=80",  // iced milk coffee
-            "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80",  // bac xiu
-            "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=80",  // black coffee
-            "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&q=80",  // cappuccino
-            "https://images.unsplash.com/photo-1541167760496-1628856ab772?w=400&q=80",  // latte
-            "https://images.unsplash.com/photo-1515823662972-da6a2e4d3fb2?w=400&q=80",  // matcha latte
-            "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",  // peach tea
-            "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",  // lychee tea
-            "https://images.unsplash.com/photo-1527960669566-f882ba85a4c6?w=400&q=80",  // lemon tea
-            "https://images.unsplash.com/photo-1558618047-f4e90a1e8b8b?w=400&q=80",  // milk tea
-            "https://images.unsplash.com/photo-1558618047-f4e90a1e8b8b?w=400&q=80",  // bubble milk tea
-            "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",  // oolong tea
-            "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",  // strawberry tea
-            "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&q=80",  // iced chocolate
-            "https://images.unsplash.com/photo-1558618047-f4e90a1e8b8b?w=400&q=80",  // brown sugar milk tea
-            "https://images.unsplash.com/photo-1517959105821-eaf2591984d2?w=400&q=80",  // salted coffee
-            "https://images.unsplash.com/photo-1541167760496-1628856ab772?w=400&q=80",  // caramel latte
-            "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=80",  // orange cold brew
-            "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80",  // cream bac xiu
-            "https://images.unsplash.com/photo-1515823662972-da6a2e4d3fb2?w=400&q=80",  // oat matcha
-            "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&q=80",  // hot cappuccino
-            "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&q=80",  // cream choco
-            "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=80",  // espresso tonic
-            "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=80",  // iced americano
-            "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&q=80",  // mocha choco
-            "https://images.unsplash.com/photo-1517959105821-eaf2591984d2?w=400&q=80",  // coconut coffee
-            "https://images.unsplash.com/photo-1541167760496-1628856ab772?w=400&q=80",  // vanilla latte
-            "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=80",  // milk cold brew
-            "https://images.unsplash.com/photo-1517959105821-eaf2591984d2?w=400&q=80",  // almond coffee
-            "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&q=80"   // hot chocolate
+            "http://localhost:5122/uploads/products/ca-phe-sua-da.png",
+            "http://localhost:5122/uploads/products/bac-xiu.png",
+            "http://localhost:5122/uploads/products/tra-sua-tran-chau.png",
+            "http://localhost:5122/uploads/products/tra-dao-cam-sa.png",
+            "http://localhost:5122/uploads/products/tra-chanh.png",
+            "http://localhost:5122/uploads/products/tra-vai.png",
+            "http://localhost:5122/uploads/products/matcha-latte.png",
+            "http://localhost:5122/uploads/products/chocolate-da-xay.png",
+            "http://localhost:5122/uploads/products/nuoc-ep-cam.png",
+            "http://localhost:5122/uploads/products/nuoc-ep-dua-hau.png",
+            "http://localhost:5122/uploads/products/sinh-to-bo.png",
+            "http://localhost:5122/uploads/products/sinh-to-xoai.png"
         ],
-        // Group 3 - Trà & Trà sữa (30 ảnh)
+        // Group 3 - Trà & Trà sữa (12 ảnh thực tế từ DOCX)
         [
-            "https://images.unsplash.com/photo-1558618047-f4e90a1e8b8b?w=400&q=80",  // classic milk tea
-            "https://images.unsplash.com/photo-1558618047-f4e90a1e8b8b?w=400&q=80",  // black pearl milk tea
-            "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",  // oolong milk tea
-            "https://images.unsplash.com/photo-1515823662972-da6a2e4d3fb2?w=400&q=80",  // matcha milk tea
-            "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",  // peach tea
-            "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",  // lychee tea
-            "https://images.unsplash.com/photo-1527960669566-f882ba85a4c6?w=400&q=80",  // lemon tea
-            "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",  // strawberry tea
-            "https://images.unsplash.com/photo-1527960669566-f882ba85a4c6?w=400&q=80",  // honey kumquat tea
-            "https://images.unsplash.com/photo-1558618047-f4e90a1e8b8b?w=400&q=80",  // taro milk tea
-            "https://images.unsplash.com/photo-1558618047-f4e90a1e8b8b?w=400&q=80",  // choco milk tea
-            "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",  // oolong cream
-            "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",  // mango tea
-            "https://images.unsplash.com/photo-1527960669566-f882ba85a4c6?w=400&q=80",  // orange tea
-            "https://images.unsplash.com/photo-1558618047-f4e90a1e8b8b?w=400&q=80",  // brown sugar milk tea
-            "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",  // oolong cheese cream
-            "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",  // peach pineapple tea
-            "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",  // jasmine lychee tea
-            "https://images.unsplash.com/photo-1558618047-f4e90a1e8b8b?w=400&q=80",  // golden pearl milk tea
-            "https://images.unsplash.com/photo-1527960669566-f882ba85a4c6?w=400&q=80",  // honey lemon tea
-            "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",  // mulberry tea
-            "https://images.unsplash.com/photo-1558618047-f4e90a1e8b8b?w=400&q=80",  // taro pearl milk tea
-            "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",  // tropical mango tea
-            "https://images.unsplash.com/photo-1515823662972-da6a2e4d3fb2?w=400&q=80",  // matcha pearl milk tea
-            "https://images.unsplash.com/photo-1527960669566-f882ba85a4c6?w=400&q=80",  // cinnamon orange tea
-            "https://images.unsplash.com/photo-1558618047-f4e90a1e8b8b?w=400&q=80",  // chestnut milk tea
-            "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",  // guava tea
-            "https://images.unsplash.com/photo-1558618047-f4e90a1e8b8b?w=400&q=80",  // caramel milk tea
-            "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",  // mint pineapple tea
-            "https://images.unsplash.com/photo-1558618047-f4e90a1e8b8b?w=400&q=80"   // pudding milk tea
+            "http://localhost:5122/uploads/products/tra-sua-tran-chau.png",
+            "http://localhost:5122/uploads/products/tra-dao-cam-sa.png",
+            "http://localhost:5122/uploads/products/tra-chanh.png",
+            "http://localhost:5122/uploads/products/tra-vai.png",
+            "http://localhost:5122/uploads/products/matcha-latte.png",
+            "http://localhost:5122/uploads/products/chocolate-da-xay.png",
+            "http://localhost:5122/uploads/products/nuoc-ep-cam.png",
+            "http://localhost:5122/uploads/products/nuoc-ep-dua-hau.png",
+            "http://localhost:5122/uploads/products/sinh-to-bo.png",
+            "http://localhost:5122/uploads/products/sinh-to-xoai.png",
+            "http://localhost:5122/uploads/products/ca-phe-sua-da.png",
+            "http://localhost:5122/uploads/products/bac-xiu.png"
         ]
     ];
 
-    // Ảnh cho SaviBite Box (hộp bất ngờ) theo nhóm
+    // Ảnh cho SaviBite Box (hộp thực phẩm bất ngờ) theo nhóm thực phẩm từ DOCX
     private static readonly string[][] BoxImages =
     [
         // Group 0 - Hộp bánh
         [
-            "https://images.unsplash.com/photo-1549894728-c8b5a6b02b9b?w=400&q=80",
-            "https://images.unsplash.com/photo-1607478900766-efe13248b125?w=400&q=80",
-            "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&q=80",
-            "https://images.unsplash.com/photo-1551024601-bec78aea704b?w=400&q=80",
-            "https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?w=400&q=80"
+            "http://localhost:5122/uploads/products/croissant-ngot.png",
+            "http://localhost:5122/uploads/products/tiramisu.png",
+            "http://localhost:5122/uploads/products/cheesecake.png",
+            "http://localhost:5122/uploads/products/banh-su-kem.png",
+            "http://localhost:5122/uploads/products/donut-socola.png"
         ],
-        // Group 1 - Hộp cơm
+        // Group 1 - Hộp cơm & món chay
         [
-            "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&q=80",
-            "https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400&q=80",
-            "https://images.unsplash.com/photo-1547592180-85f173990554?w=400&q=80",
-            "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80",
-            "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&q=80"
+            "http://localhost:5122/uploads/products/com-chay-thap-cam.png",
+            "http://localhost:5122/uploads/products/com-chien-chay.png",
+            "http://localhost:5122/uploads/products/mi-xao-chay.png",
+            "http://localhost:5122/uploads/products/salad-rau-cu.png",
+            "http://localhost:5122/uploads/products/bun-xao-chay.png"
         ],
         // Group 2 - Hộp cà phê
         [
-            "https://images.unsplash.com/photo-1517959105821-eaf2591984d2?w=400&q=80",
-            "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&q=80",
-            "https://images.unsplash.com/photo-1541167760496-1628856ab772?w=400&q=80",
-            "https://images.unsplash.com/photo-1515823662972-da6a2e4d3fb2?w=400&q=80",
-            "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=80"
+            "http://localhost:5122/uploads/products/ca-phe-sua-da.png",
+            "http://localhost:5122/uploads/products/bac-xiu.png",
+            "http://localhost:5122/uploads/products/chocolate-da-xay.png",
+            "http://localhost:5122/uploads/products/matcha-latte.png",
+            "http://localhost:5122/uploads/products/sinh-to-bo.png"
         ],
-        // Group 3 - Hộp trà sữa
+        // Group 3 - Hộp trà sữa & giải nhiệt
         [
-            "https://images.unsplash.com/photo-1558618047-f4e90a1e8b8b?w=400&q=80",
-            "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",
-            "https://images.unsplash.com/photo-1527960669566-f882ba85a4c6?w=400&q=80",
-            "https://images.unsplash.com/photo-1558618047-f4e90a1e8b8b?w=400&q=80",
-            "https://images.unsplash.com/photo-1515823662972-da6a2e4d3fb2?w=400&q=80"
+            "http://localhost:5122/uploads/products/tra-sua-tran-chau.png",
+            "http://localhost:5122/uploads/products/tra-dao-cam-sa.png",
+            "http://localhost:5122/uploads/products/tra-chanh.png",
+            "http://localhost:5122/uploads/products/tra-vai.png",
+            "http://localhost:5122/uploads/products/nuoc-ep-cam.png"
         ]
     ];
 
