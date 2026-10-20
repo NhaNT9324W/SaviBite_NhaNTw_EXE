@@ -24,6 +24,7 @@ export type OfferListItem = {
   shopName: string;
   shopAddress: string;
   distanceKm: number | null;
+  imageUrl?: string | null;
 };
 
 export type OfferListResult = {

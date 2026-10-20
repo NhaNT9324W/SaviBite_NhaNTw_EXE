@@ -4,7 +4,7 @@ import {
   useLocalSearchParams,
   useRouter,
 } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -29,6 +29,7 @@ import {
 
 import OfferCard from '../components/OfferCard';
 import { useOffers } from '../hooks/useOffers';
+import { offerApi } from '../api/offer.api';
 
 import type {
   OfferFilters,
@@ -36,6 +37,25 @@ import type {
 } from '../types/offer.types';
 
 type Category = 'ALL' | OfferType;
+
+type PriceRange = 'ALL' | 'UNDER_30K' | '30K_50K' | '50K_100K' | 'OVER_100K';
+
+const PRICE_RANGES: { value: PriceRange; label: string; min?: number; max?: number }[] = [
+  { value: 'ALL', label: 'Tất cả giá' },
+  { value: 'UNDER_30K', label: '< 30.000đ', max: 30000 },
+  { value: '30K_50K', label: '30k - 50k', min: 30000, max: 50000 },
+  { value: '50K_100K', label: '50k - 100k', min: 50000, max: 100000 },
+  { value: 'OVER_100K', label: '> 100.000đ', min: 100000 },
+];
+
+const POPULAR_SEARCH_TAGS = [
+  'Bánh ngọt',
+  'Cơm sườn',
+  'Cà phê',
+  'Trà sữa',
+  'Bánh mì',
+  'Ăn vặt',
+];
 
 type SortMode =
   | 'endingSoon'
@@ -48,9 +68,9 @@ const CATEGORIES: {
   value: Category;
   label: string;
 }[] = [
-  { value: 'ALL', label: 'Tất cả' },
-  { value: 'FLASH_SALE', label: 'Flash Sale' },
-  { value: 'SAVIBITE_BOX', label: 'SaviBite Box' },
+  { value: 'ALL', label: 'Tất cả loại' },
+  { value: 'FLASH_SALE', label: '⚡ Flash Sale' },
+  { value: 'SAVIBITE_BOX', label: '🎁 SaviBite Box' },
 ];
 
 const SORT_OPTIONS: {
@@ -95,6 +115,11 @@ export default function OffersScreen() {
     parseCategory(params.type)
   );
 
+  const [selectedFoodCategory, setSelectedFoodCategory] = useState<string>('ALL');
+  const [priceRange, setPriceRange] = useState<PriceRange>('ALL');
+  const [showFilterPanel, setShowFilterPanel] = useState<boolean>(false);
+  const [categoriesList, setCategoriesList] = useState<{ id: string; name: string }[]>([]);
+
   const [searchInput, setSearchInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -108,10 +133,23 @@ export default function OffersScreen() {
     setPage(1);
   }, [params.type]);
 
+  useEffect(() => {
+    offerApi
+      .getFilterOptions()
+      .then((res) => {
+        if (res?.categories && Array.isArray(res.categories)) {
+          setCategoriesList(res.categories);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const desktop = width >= layout.breakpoint.desktop;
   const tablet = width >= layout.breakpoint.tablet;
 
   const columns = desktop ? 3 : tablet ? 2 : 1;
+
+  const currentPriceRange = PRICE_RANGES.find((p) => p.value === priceRange);
 
   const filters: OfferFilters = {
     page,
@@ -119,6 +157,18 @@ export default function OffersScreen() {
 
     ...(category !== 'ALL'
       ? { type: category }
+      : {}),
+
+    ...(selectedFoodCategory !== 'ALL'
+      ? { categoryId: selectedFoodCategory }
+      : {}),
+
+    ...(currentPriceRange?.min !== undefined
+      ? { minPrice: currentPriceRange.min }
+      : {}),
+
+    ...(currentPriceRange?.max !== undefined
+      ? { maxPrice: currentPriceRange.max }
       : {}),
 
     ...(searchQuery
@@ -136,6 +186,12 @@ export default function OffersScreen() {
         : 'asc',
   };
 
+  const activeFiltersCount =
+    (category !== 'ALL' ? 1 : 0) +
+    (selectedFoodCategory !== 'ALL' ? 1 : 0) +
+    (priceRange !== 'ALL' ? 1 : 0) +
+    (searchQuery ? 1 : 0);
+
   const { data, loading, error, reload } =
     useOffers(filters);
 
@@ -151,18 +207,75 @@ export default function OffersScreen() {
     setPage(1);
   };
 
+  const changeFoodCategory = (next: string) => {
+    setSelectedFoodCategory(next);
+    setPage(1);
+  };
+
+  const changePriceRange = (next: PriceRange) => {
+    setPriceRange(next);
+    setPage(1);
+  };
+
+  const listSectionRef = useRef<any>(null);
+
+  const scrollToOffers = () => {
+    setTimeout(() => {
+      if (typeof document !== 'undefined') {
+        const el = document.getElementById('offers-list-section');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          return;
+        }
+      }
+    }, 60);
+  };
+
+  useEffect(() => {
+    if (!searchInput.trim()) return;
+
+    const timer = setTimeout(() => {
+      if (searchInput.trim().length >= 2 && searchInput.trim() !== searchQuery) {
+        setSearchQuery(searchInput.trim());
+        setPage(1);
+        scrollToOffers();
+      }
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
   const changeSort = (next: SortMode) => {
     setSortMode(next);
     setPage(1);
   };
 
   const submitSearch = () => {
-    setSearchQuery(searchInput.trim());
+    const trimmed = searchInput.trim();
+    setSearchQuery(trimmed);
+    setPage(1);
+    if (trimmed) {
+      scrollToOffers();
+    }
+  };
+
+  const handleTagSearch = (tag: string) => {
+    setSearchInput(tag);
+    setSearchQuery(tag);
+    setPage(1);
+    scrollToOffers();
+  };
+
+  const handleClearSearch = () => {
+    setSearchInput('');
+    setSearchQuery('');
     setPage(1);
   };
 
   const resetFilters = () => {
     setCategory('ALL');
+    setSelectedFoodCategory('ALL');
+    setPriceRange('ALL');
     setSearchInput('');
     setSearchQuery('');
     setSortMode('endingSoon');
@@ -191,7 +304,7 @@ export default function OffersScreen() {
       </View>
 
       <ScreenContainer style={styles.main}>
-        {/* SEARCH */}
+        {/* SEARCH BAR */}
         <View style={styles.searchBar}>
           <View style={styles.searchField}>
             <Ionicons
@@ -204,12 +317,31 @@ export default function OffersScreen() {
               value={searchInput}
               onChangeText={setSearchInput}
               onSubmitEditing={submitSearch}
+              onKeyPress={(e: any) => {
+                if (e.nativeEvent?.key === 'Enter') {
+                  submitSearch();
+                }
+              }}
               returnKeyType="search"
-              placeholder="Tìm tên món ăn hoặc ưu đãi..."
+              placeholder="Tìm tên món ăn, bánh, cơm, đồ uống..."
               placeholderTextColor={colors.textMuted}
               style={styles.searchInput}
               accessibilityLabel="Tìm kiếm ưu đãi"
             />
+
+            {!!searchInput && (
+              <Pressable
+                onPress={handleClearSearch}
+                style={styles.clearSearchButton}
+                accessibilityLabel="Xóa nội dung tìm kiếm"
+              >
+                <Ionicons
+                  name="close-circle"
+                  size={19}
+                  color={colors.textMuted}
+                />
+              </Pressable>
+            )}
           </View>
 
           <AppButton
@@ -218,39 +350,28 @@ export default function OffersScreen() {
           />
         </View>
 
-        {/* CATEGORY FILTER */}
-        <View style={styles.filterSection}>
-          <Text style={styles.filterLabel}>
-            Loại ưu đãi
-          </Text>
-
-          <View style={styles.categoryTabs}>
-            {CATEGORIES.map((item) => {
-              const selected =
-                category === item.value;
-
+        {/* POPULAR SEARCH TAGS */}
+        <View style={styles.tagsContainer}>
+          <Text style={styles.tagsLabel}>Gợi ý món:</Text>
+          <View style={styles.tagsRow}>
+            {POPULAR_SEARCH_TAGS.map((tag) => {
+              const active = searchQuery === tag;
               return (
                 <Pressable
-                  key={item.value}
-                  onPress={() =>
-                    changeCategory(item.value)
-                  }
-                  accessibilityRole="button"
-                  accessibilityState={{ selected }}
+                  key={tag}
                   style={[
-                    styles.categoryTab,
-                    selected &&
-                      styles.categoryTabActive,
+                    styles.tagChip,
+                    active && styles.tagChipActive,
                   ]}
+                  onPress={() => handleTagSearch(tag)}
                 >
                   <Text
                     style={[
-                      styles.categoryTabText,
-                      selected &&
-                        styles.categoryTabTextActive,
+                      styles.tagText,
+                      active && styles.tagTextActive,
                     ]}
                   >
-                    {item.label}
+                    {tag}
                   </Text>
                 </Pressable>
               );
@@ -258,8 +379,184 @@ export default function OffersScreen() {
           </View>
         </View>
 
+        {/* FILTER SECTION */}
+        <View style={styles.filterSectionCard}>
+          {/* CATEGORY FILTER */}
+          <View style={styles.filterSection}>
+            <Text style={styles.filterLabel}>
+              Hình thức ưu đãi:
+            </Text>
+
+            <View style={styles.categoryTabs}>
+              {CATEGORIES.map((item) => {
+                const selected =
+                  category === item.value;
+
+                return (
+                  <Pressable
+                    key={item.value}
+                    onPress={() =>
+                      changeCategory(item.value)
+                    }
+                    accessibilityRole="button"
+                    accessibilityState={{ selected }}
+                    style={[
+                      styles.categoryTab,
+                      selected &&
+                        styles.categoryTabActive,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.categoryTabText,
+                        selected &&
+                          styles.categoryTabTextActive,
+                      ]}
+                    >
+                      {item.label}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </View>
+
+          {/* PRICE RANGE FILTER */}
+          <View style={styles.filterSection}>
+            <Text style={styles.filterLabel}>
+              Khoảng giá:
+            </Text>
+
+            <View style={styles.priceTabs}>
+              {PRICE_RANGES.map((item) => {
+                const selected =
+                  priceRange === item.value;
+
+                return (
+                  <Pressable
+                    key={item.value}
+                    onPress={() =>
+                      changePriceRange(item.value)
+                    }
+                    style={[
+                      styles.priceTab,
+                      selected &&
+                        styles.priceTabActive,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.priceTabText,
+                        selected &&
+                          styles.priceTabTextActive,
+                      ]}
+                    >
+                      {item.label}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </View>
+
+          {/* FOOD CATEGORIES FILTER */}
+          {categoriesList.length > 0 && (
+            <View style={styles.filterSection}>
+              <Text style={styles.filterLabel}>
+                Danh mục món:
+              </Text>
+
+              <View style={styles.categoryTabs}>
+                <Pressable
+                  onPress={() => changeFoodCategory('ALL')}
+                  style={[
+                    styles.foodTab,
+                    selectedFoodCategory === 'ALL' &&
+                      styles.foodTabActive,
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.foodTabText,
+                      selectedFoodCategory === 'ALL' &&
+                        styles.foodTabTextActive,
+                    ]}
+                  >
+                    Tất cả món
+                  </Text>
+                </Pressable>
+
+                {categoriesList.map((cat) => {
+                  const selected =
+                    selectedFoodCategory === cat.id;
+
+                  return (
+                    <Pressable
+                      key={cat.id}
+                      onPress={() =>
+                        changeFoodCategory(cat.id)
+                      }
+                      style={[
+                        styles.foodTab,
+                        selected &&
+                          styles.foodTabActive,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.foodTabText,
+                          selected &&
+                            styles.foodTabTextActive,
+                        ]}
+                      >
+                        {cat.name}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
+            </View>
+          )}
+
+          {/* ACTIVE FILTER BANNER */}
+          {activeFiltersCount > 0 && (
+            <View style={styles.activeFiltersBanner}>
+              <View style={styles.activeFilterBadge}>
+                <Ionicons
+                  name="funnel"
+                  size={14}
+                  color={colors.primary}
+                />
+                <Text style={styles.activeFilterCountText}>
+                  Đang lọc: {activeFiltersCount} điều kiện
+                </Text>
+              </View>
+
+              <Pressable
+                onPress={resetFilters}
+                style={styles.resetButton}
+              >
+                <Ionicons
+                  name="refresh-outline"
+                  size={14}
+                  color={colors.textSecondary}
+                />
+                <Text style={styles.resetButtonText}>
+                  Xóa bộ lọc
+                </Text>
+              </Pressable>
+            </View>
+          )}
+        </View>
+
         {/* RESULT TOOLBAR */}
-        <View style={styles.toolbar}>
+        <View
+          ref={listSectionRef}
+          nativeID="offers-list-section"
+          // @ts-ignore
+          id="offers-list-section"
+          style={[styles.toolbar, { scrollMarginTop: 24 } as any]}
+        >
           <View style={styles.resultSummary}>
             <Text style={styles.resultTitle}>
               Danh sách ưu đãi
@@ -434,6 +731,55 @@ const styles = StyleSheet.create({
     color: colors.text,
     paddingVertical: spacing.md,
   },
+  clearSearchButton: {
+    padding: spacing.xs,
+  },
+  tagsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: spacing.sm,
+    marginTop: -spacing.md,
+  },
+  tagsLabel: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: colors.textSecondary,
+  },
+  tagsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+  },
+  tagChip: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.pill,
+    backgroundColor: colors.surfaceMuted,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  tagChipActive: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+  tagText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: colors.textSecondary,
+  },
+  tagTextActive: {
+    color: colors.white,
+    fontWeight: '700',
+  },
+  filterSectionCard: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    padding: spacing.lg,
+    gap: spacing.lg,
+  },
   filterSection: {
     gap: spacing.md,
   },
@@ -466,6 +812,85 @@ const styles = StyleSheet.create({
   },
   categoryTabTextActive: {
     color: colors.white,
+  },
+  priceTabs: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+  },
+  priceTab: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.sm,
+    backgroundColor: colors.surfaceMuted,
+  },
+  priceTabActive: {
+    borderColor: colors.eco,
+    backgroundColor: colors.eco,
+  },
+  priceTabText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: colors.textSecondary,
+  },
+  priceTabTextActive: {
+    color: colors.white,
+    fontWeight: '700',
+  },
+  foodTab: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.sm,
+    backgroundColor: colors.surface,
+  },
+  foodTabActive: {
+    borderColor: colors.primary,
+    backgroundColor: colors.surfaceMuted,
+  },
+  foodTabText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: colors.text,
+  },
+  foodTabTextActive: {
+    color: colors.primary,
+    fontWeight: '800',
+  },
+  activeFiltersBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: spacing.md,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+  },
+  activeFilterBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
+  activeFilterCountText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: colors.primary,
+  },
+  resetButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
+    borderRadius: radius.xs,
+    backgroundColor: colors.surfaceMuted,
+  },
+  resetButtonText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: colors.textSecondary,
   },
   toolbar: {
     flexDirection: 'row',

@@ -15,6 +15,11 @@ import {
 
 import { APP_CONFIG } from '../../../config/app.config';
 import { useAuth } from '../context/AuthProvider';
+import {
+  getEffectiveGoogleClientId,
+  promptOfficialGoogleSignIn,
+  saveGoogleClientId,
+} from '../services/googleAuth.service';
 
 import CustomerLayout from '../../../shared/components/layout/CustomerLayout';
 import ScreenContainer from '../../../shared/components/layout/ScreenContainer';
@@ -33,6 +38,7 @@ export default function LoginScreen() {
 
   const {
     login,
+    loginWithGoogle,
     isAuthenticated,
     user,
     status,
@@ -49,8 +55,12 @@ export default function LoginScreen() {
 
   const [error, setError] = useState('');
 
-  const [googleInfoOpen, setGoogleInfoOpen] =
+  const [googleConfigModalOpen, setGoogleConfigModalOpen] =
     useState(false);
+  const [inputClientId, setInputClientId] = useState('');
+  const [googleSubmitting, setGoogleSubmitting] =
+    useState(false);
+  const [googleError, setGoogleError] = useState('');
 
   const desktop =
     width >= layout.breakpoint.desktop;
@@ -96,9 +106,69 @@ export default function LoginScreen() {
     }
   };
 
+  const triggerGoogleOAuth = async (clientIdToUse: string) => {
+    const trimmedId = clientIdToUse.trim();
+    if (!trimmedId) {
+      setGoogleConfigModalOpen(true);
+      return;
+    }
+
+    setGoogleSubmitting(true);
+    setGoogleError('');
+
+    await promptOfficialGoogleSignIn(
+      trimmedId,
+      async (profile, token) => {
+        try {
+          await loginWithGoogle({
+            idToken: token,
+            email: profile.email,
+            fullName: profile.name,
+            avatarUrl: profile.picture,
+          });
+          setGoogleConfigModalOpen(false);
+          router.replace('/');
+        } catch (backendErr: unknown) {
+          setGoogleError(
+            backendErr instanceof Error
+              ? backendErr.message
+              : 'Đăng nhập Google thất bại trên hệ thống SaviBite.'
+          );
+        } finally {
+          setGoogleSubmitting(false);
+        }
+      },
+      (errorMessage) => {
+        setGoogleSubmitting(false);
+        setGoogleError(errorMessage);
+        if (
+          errorMessage.toLowerCase().includes('client id') ||
+          errorMessage.toLowerCase().includes('client_id')
+        ) {
+          setGoogleConfigModalOpen(true);
+        }
+      }
+    );
+  };
+
   const handleGoogleLogin = () => {
-    // Backend chưa hỗ trợ Google OAuth.
-    setGoogleInfoOpen(true);
+    setGoogleError('');
+    const existingClientId = getEffectiveGoogleClientId();
+    if (existingClientId) {
+      triggerGoogleOAuth(existingClientId);
+    } else {
+      setGoogleConfigModalOpen(true);
+    }
+  };
+
+  const handleSaveAndLoginGoogle = () => {
+    const trimmed = inputClientId.trim();
+    if (!trimmed) {
+      setGoogleError('Vui lòng nhập Google Client ID của bạn.');
+      return;
+    }
+    saveGoogleClientId(trimmed);
+    triggerGoogleOAuth(trimmed);
   };
 
   if (status === 'loading') {
@@ -384,21 +454,25 @@ export default function LoginScreen() {
             <Pressable
               style={[
                 styles.googleButton,
-                submitting && styles.buttonDisabled,
+                (submitting || googleSubmitting) && styles.buttonDisabled,
               ]}
-              disabled={submitting}
+              disabled={submitting || googleSubmitting}
               onPress={handleGoogleLogin}
               accessibilityRole="button"
               accessibilityLabel="Tiếp tục với Google"
             >
-              <View style={styles.googleIcon}>
-                <Text style={styles.googleLetter}>
-                  G
-                </Text>
-              </View>
+              {googleSubmitting ? (
+                <ActivityIndicator size="small" color="#4285F4" />
+              ) : (
+                <View style={styles.googleIcon}>
+                  <Text style={styles.googleLetter}>
+                    G
+                  </Text>
+                </View>
+              )}
 
               <Text style={styles.googleText}>
-                Tiếp tục với Google
+                {googleSubmitting ? 'Đang kết nối Google...' : 'Tiếp tục với Google'}
               </Text>
 
               <Ionicons
@@ -407,6 +481,13 @@ export default function LoginScreen() {
                 color={colors.textSecondary}
               />
             </Pressable>
+
+            {!!googleError && !googleConfigModalOpen && (
+              <View style={styles.googleInlineErrorBox}>
+                <Ionicons name="alert-circle-outline" size={16} color="#D93025" />
+                <Text style={styles.googleInlineErrorText}>{googleError}</Text>
+              </View>
+            )}
 
             {/* NÚT ĐĂNG KÝ */}
             <View style={styles.registerRow}>
@@ -458,64 +539,83 @@ export default function LoginScreen() {
         </View>
       </ScreenContainer>
 
-      {/* MODAL GOOGLE LOGIN */}
+      {/* MODAL CẤU HÌNH GOOGLE CLIENT ID */}
       <Modal
-        visible={googleInfoOpen}
+        visible={googleConfigModalOpen}
         transparent
         animationType="fade"
-        onRequestClose={() => setGoogleInfoOpen(false)}
+        onRequestClose={() => {
+          if (!googleSubmitting) setGoogleConfigModalOpen(false);
+        }}
       >
         <View style={styles.modalOverlay}>
           <Pressable
             style={StyleSheet.absoluteFill}
-            onPress={() => setGoogleInfoOpen(false)}
+            onPress={() => {
+              if (!googleSubmitting) setGoogleConfigModalOpen(false);
+            }}
             accessibilityLabel="Đóng thông báo"
           />
 
           <View style={styles.modalCard}>
-            <View style={styles.modalIcon}>
-              <Ionicons
-                name="information-circle-outline"
-                size={29}
-                color={colors.primary}
-              />
+            <View style={styles.googleBrandHeader}>
+              <View style={styles.googleIconCircle}>
+                <Text style={styles.googleBrandLetter}>G</Text>
+              </View>
+              <Text style={styles.modalTitle}>
+                Đăng nhập với Google
+              </Text>
+              <Text style={styles.modalDescription}>
+                Để mở cửa sổ chọn tài khoản Google thật như Ảnh 2, bạn cần cung cấp Google Web Client ID:
+              </Text>
             </View>
 
-            <Text style={styles.modalTitle}>
-              Đăng nhập Google
-            </Text>
+            {!!googleError && (
+              <View style={styles.googleErrorBox}>
+                <Ionicons name="alert-circle-outline" size={18} color="#D93025" />
+                <Text style={styles.googleErrorText}>{googleError}</Text>
+              </View>
+            )}
 
-            <Text style={styles.modalDescription}>
-              Tính năng đăng nhập bằng Google
-              chưa được kết nối với hệ thống
-              xác thực SaviBite.
-            </Text>
+            <View style={styles.googleInstructionBox}>
+              <Text style={styles.googleInstructionTitle}>Các bước tạo Client ID (2 phút):</Text>
+              <Text style={styles.googleInstructionStep}>1. Vào console.cloud.google.com</Text>
+              <Text style={styles.googleInstructionStep}>2. Tạo OAuth Client ID (loại Web application)</Text>
+              <Text style={styles.googleInstructionStep}>3. Thêm URI khởi tạo: http://localhost:8081</Text>
+              <Text style={styles.googleInstructionStep}>4. Dán Client ID vào ô bên dưới:</Text>
+            </View>
 
-            <Text style={styles.modalDescription}>
-              Hiện tại bạn có thể đăng nhập
-              bằng email và mật khẩu hoặc
-              đăng ký tài khoản mới.
-            </Text>
+            <TextInput
+              value={inputClientId}
+              onChangeText={setInputClientId}
+              placeholder="ví dụ: 123456789-abc.apps.googleusercontent.com"
+              placeholderTextColor={colors.textMuted}
+              autoCapitalize="none"
+              autoCorrect={false}
+              style={styles.googleClientIdInput}
+              editable={!googleSubmitting}
+            />
 
             <Pressable
-              style={styles.modalPrimary}
-              onPress={() => setGoogleInfoOpen(false)}
+              style={[styles.modalPrimary, googleSubmitting && styles.buttonDisabled]}
+              disabled={googleSubmitting}
+              onPress={handleSaveAndLoginGoogle}
             >
-              <Text style={styles.modalPrimaryText}>
-                Đã hiểu
-              </Text>
+              {googleSubmitting ? (
+                <ActivityIndicator size="small" color={colors.white} />
+              ) : (
+                <Text style={styles.modalPrimaryText}>
+                  Lưu & Mở đăng nhập Google ngay
+                </Text>
+              )}
             </Pressable>
 
             <Pressable
               style={styles.modalSecondary}
-              onPress={() => {
-                setGoogleInfoOpen(false);
-                router.push('/register');
-              }}
+              disabled={googleSubmitting}
+              onPress={() => setGoogleConfigModalOpen(false)}
             >
-              <Text style={styles.modalSecondaryText}>
-                Đăng ký tài khoản
-              </Text>
+              <Text style={styles.modalSecondaryText}>Đóng</Text>
             </Pressable>
           </View>
         </View>
@@ -859,28 +959,116 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
+  googleBrandHeader: {
+    alignItems: 'center',
+    gap: spacing.sm,
+    width: '100%',
+  },
+  googleIconCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#fff',
+    borderWidth: 1.5,
+    borderColor: '#4285F4',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.xs,
+  },
+  googleBrandLetter: {
+    fontSize: 24,
+    fontWeight: '900',
+    color: '#4285F4',
+  },
+  googleErrorBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    backgroundColor: '#FCE8E6',
+    borderWidth: 1,
+    borderColor: '#F2998C',
+    borderRadius: radius.sm,
+    padding: spacing.sm,
+    width: '100%',
+  },
+  googleErrorText: {
+    fontSize: 13,
+    color: '#D93025',
+    fontWeight: '600',
+    flex: 1,
+  },
+  googleInstructionBox: {
+    width: '100%',
+    backgroundColor: colors.surfaceMuted,
+    borderRadius: radius.sm,
+    padding: spacing.md,
+    gap: 4,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  googleInstructionTitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: colors.text,
+    marginBottom: 2,
+  },
+  googleInstructionStep: {
+    fontSize: 12,
+    color: colors.textSecondary,
+    lineHeight: 18,
+  },
+  googleClientIdInput: {
+    width: '100%',
+    backgroundColor: colors.background,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    fontSize: 13,
+    color: colors.text,
+    marginTop: spacing.xs,
+  },
+  googleInlineErrorBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    backgroundColor: '#FCE8E6',
+    borderWidth: 1,
+    borderColor: '#F2998C',
+    borderRadius: radius.sm,
+    padding: spacing.sm,
+    marginTop: spacing.sm,
+  },
+  googleInlineErrorText: {
+    fontSize: 12,
+    color: '#D93025',
+    fontWeight: '600',
+    flex: 1,
+  },
   modalTitle: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: '800',
     color: colors.text,
     textAlign: 'center',
   },
 
   modalDescription: {
-    fontSize: 14,
-    lineHeight: 23,
+    fontSize: 13,
+    lineHeight: 20,
     color: colors.textSecondary,
     textAlign: 'center',
   },
 
   modalPrimary: {
     width: '100%',
-    minHeight: 46,
-    backgroundColor: colors.primary,
+    minHeight: 44,
+    backgroundColor: '#4285F4',
     borderRadius: radius.sm,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: spacing.lg,
+    marginTop: spacing.xs,
   },
 
   modalPrimaryText: {
@@ -896,6 +1084,6 @@ const styles = StyleSheet.create({
   modalSecondaryText: {
     fontSize: 14,
     fontWeight: '700',
-    color: colors.primary,
+    color: colors.textMuted,
   },
 });

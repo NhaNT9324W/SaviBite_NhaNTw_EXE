@@ -40,3 +40,5 @@ BackEnd/*.zip
 
 # Runtime uploads
 **/wwwroot/uploads/
+docx_table_dump.json
+extracted_doc_text.txt

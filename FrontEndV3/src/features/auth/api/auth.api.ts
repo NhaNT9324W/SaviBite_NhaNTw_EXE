@@ -2,6 +2,7 @@ import { apiRequest, ApiRequestError } from '../../../shared/api/api-client';
 import type {
   AuthSession,
   AuthUser,
+  GoogleLoginRequest,
   LoginRequest,
   RefreshRequest,
   RegisterRequest,
@@ -43,6 +44,9 @@ export const authApi = {
   },
   login(request: LoginRequest): Promise<AuthSession> {
     return authRequest<AuthSession>('/api/auth/login', 'POST', request);
+  },
+  loginWithGoogle(request: GoogleLoginRequest): Promise<AuthSession> {
+    return authRequest<AuthSession>('/api/auth/google', 'POST', request);
   },
   refresh(request: RefreshRequest): Promise<AuthSession> {
     return authRequest<AuthSession>('/api/auth/refresh', 'POST', request);

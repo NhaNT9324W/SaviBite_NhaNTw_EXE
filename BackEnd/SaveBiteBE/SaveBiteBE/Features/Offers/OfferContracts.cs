@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace SaveBiteBE.Features.Offers;
 
@@ -142,7 +142,8 @@ public record OfferListItemDto(
     Guid ShopId,
     string ShopName,
     string ShopAddress,
-    double? DistanceKm = null
+    double? DistanceKm = null,
+    string? ImageUrl = null
 );
 
 public record OfferListResultDto(

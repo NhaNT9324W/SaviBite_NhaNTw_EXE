@@ -266,6 +266,7 @@ export default function OrderDetailScreen() {
   const [error, setError] = useState('');
 
   const [paying, setPaying] = useState(false);
+  const [selectedMethod, setSelectedMethod] = useState<'MOMO' | 'VNPAY' | 'QR' | 'COD'>('MOMO');
   const [paymentMessage, setPaymentMessage] =
     useState('');
   const [paymentUncertain, setPaymentUncertain] =
@@ -884,21 +885,92 @@ export default function OrderDetailScreen() {
 
             {canPay && (
               <View style={styles.panel}>
-                <Text style={styles.sectionTitle}>
-                  Thanh toán mô phỏng
-                </Text>
+                <View style={styles.sectionHeading}>
+                  <Ionicons name="card-outline" size={22} color={colors.primary} />
+                  <Text style={styles.sectionTitle}>
+                    Thanh toán mô phỏng (Sandbox)
+                  </Text>
+                </View>
 
                 <Text style={styles.muted}>
-                  Chức năng chỉ dành cho môi trường
-                  Development. Không thực hiện
-                  thanh toán tiền thật.
+                  Chọn cổng thanh toán mô phỏng và trải nghiệm xác thực:
                 </Text>
+
+                <View style={styles.paymentMethodsRow}>
+                  <Pressable
+                    style={[
+                      styles.methodChip,
+                      selectedMethod === 'MOMO' && styles.methodChipActive,
+                    ]}
+                    onPress={() => setSelectedMethod('MOMO')}
+                  >
+                    <Text
+                      style={[
+                        styles.methodChipText,
+                        selectedMethod === 'MOMO' && styles.methodChipTextActive,
+                      ]}
+                    >
+                      ⚡ Ví MoMo
+                    </Text>
+                  </Pressable>
+
+                  <Pressable
+                    style={[
+                      styles.methodChip,
+                      selectedMethod === 'VNPAY' && styles.methodChipActive,
+                    ]}
+                    onPress={() => setSelectedMethod('VNPAY')}
+                  >
+                    <Text
+                      style={[
+                        styles.methodChipText,
+                        selectedMethod === 'VNPAY' && styles.methodChipTextActive,
+                      ]}
+                    >
+                      💳 Cổng VNPAY
+                    </Text>
+                  </Pressable>
+
+                  <Pressable
+                    style={[
+                      styles.methodChip,
+                      selectedMethod === 'QR' && styles.methodChipActive,
+                    ]}
+                    onPress={() => setSelectedMethod('QR')}
+                  >
+                    <Text
+                      style={[
+                        styles.methodChipText,
+                        selectedMethod === 'QR' && styles.methodChipTextActive,
+                      ]}
+                    >
+                      📱 QR Napas 247
+                    </Text>
+                  </Pressable>
+
+                  <Pressable
+                    style={[
+                      styles.methodChip,
+                      selectedMethod === 'COD' && styles.methodChipActive,
+                    ]}
+                    onPress={() => setSelectedMethod('COD')}
+                  >
+                    <Text
+                      style={[
+                        styles.methodChipText,
+                        selectedMethod === 'COD' && styles.methodChipTextActive,
+                      ]}
+                    >
+                      💵 Tiền mặt (COD)
+                    </Text>
+                  </Pressable>
+                </View>
 
                 <AppButton
                   title={
                     paying
-                      ? 'Đang xử lý...'
-                      : 'Mô phỏng thanh toán thành công'
+                      ? 'Đang kết nối cổng thanh toán...'
+                      : `Mô phỏng thanh toán thành công (${selectedMethod})`
                   }
                   disabled={paying}
                   fullWidth
@@ -1108,5 +1180,31 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 22,
     color: colors.textSecondary,
+  },
+  paymentMethodsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+  },
+  methodChip: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: radius.md,
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    backgroundColor: colors.surfaceMuted,
+  },
+  methodChipActive: {
+    borderColor: colors.primary,
+    backgroundColor: colors.surface,
+  },
+  methodChipText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: colors.textSecondary,
+  },
+  methodChipTextActive: {
+    color: colors.primary,
+    fontWeight: '700',
   },
 });

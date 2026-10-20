@@ -38,6 +38,13 @@ export type AuthStatus =
   | 'authenticated'
   | 'guest';
 
+export type GoogleLoginRequest = {
+  idToken: string;
+  email?: string;
+  fullName?: string;
+  avatarUrl?: string;
+};
+
 export type AuthContextValue = {
   user: AuthUser | null;
   status: AuthStatus;
@@ -45,6 +52,9 @@ export type AuthContextValue = {
   login: (
     email: string,
     password: string
+  ) => Promise<void>;
+  loginWithGoogle: (
+    request: GoogleLoginRequest
   ) => Promise<void>;
   logout: () => Promise<void>;
   refreshSession: () => Promise<boolean>;
