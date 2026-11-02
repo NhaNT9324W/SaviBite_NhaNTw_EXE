@@ -13,15 +13,15 @@ public sealed class PaymentConfiguration
         {
             table.HasCheckConstraint(
                 "ck_payments_status",
-                "[status] IN ('SUCCESS', 'FAILED')");
+                "status IN ('SUCCESS', 'FAILED')");
 
             table.HasCheckConstraint(
                 "ck_payments_amount",
-                "[amount] > 0");
+                "amount > 0");
 
             table.HasCheckConstraint(
                 "ck_payments_provider",
-                "[provider] = 'MOCK'");
+                "provider = 'MOCK'");
         });
 
         payment.HasKey(x => x.Id);

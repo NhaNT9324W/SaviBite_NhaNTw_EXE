@@ -466,8 +466,7 @@ public static class DevelopmentDataSeeder
 
         if (!string.Equals(
             databaseName,
-            "SaviBiteAuthDev",
-            StringComparison.OrdinalIgnoreCase))
+            "SaviBiteAuthDev", StringComparison.OrdinalIgnoreCase) && !string.Equals(databaseName, "neondb", StringComparison.OrdinalIgnoreCase))
         {
             throw new InvalidOperationException(
                 "Seeder V4 chỉ được phép chạy " +

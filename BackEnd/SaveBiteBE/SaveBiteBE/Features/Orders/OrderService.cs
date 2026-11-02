@@ -1,8 +1,8 @@
+using Npgsql;
 ﻿using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SaveBiteBE.Data;
 using SaveBiteBE.Entities;
@@ -183,9 +183,7 @@ public sealed class OrderService
                 cancellationToken);
         }
         catch (DbUpdateException exception)
-            when (
-                exception.InnerException is SqlException sql &&
-                sql.Number is 2601 or 2627)
+            when (exception.InnerException is PostgresException pg && pg.SqlState == "23505")
         {
             // Transaction trong CreateCoreAsync đã được rollback.
             _db.ChangeTracker.Clear();

@@ -1,5 +1,5 @@
+using Npgsql;
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SaveBiteBE.Data;
 using SaveBiteBE.Entities;
@@ -112,8 +112,7 @@ public class AuthService
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
         catch (DbUpdateException exception)
-            when (exception.InnerException is SqlException sqlException
-                && sqlException.Number is 2601 or 2627)
+            when (exception.InnerException is PostgresException pg && pg.SqlState == "23505")
         {
             // Một yêu cầu khác có thể vừa đăng ký cùng email hoặc số điện thoại.
             throw new RegistrationException(

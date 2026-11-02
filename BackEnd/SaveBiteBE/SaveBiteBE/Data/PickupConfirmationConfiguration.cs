@@ -15,13 +15,13 @@ public sealed class PickupConfirmationConfiguration
             table.HasCheckConstraint(
                 "ck_pickup_confirmation_fields",
                 "(" +
-                "[confirmed_at] IS NULL AND " +
-                "[confirmed_by_user_id] IS NULL AND " +
-                "[confirmation_request_id] IS NULL" +
+                "confirmed_at IS NULL AND " +
+                "confirmed_by_user_id IS NULL AND " +
+                "confirmation_request_id IS NULL" +
                 ") OR (" +
-                "[confirmed_at] IS NOT NULL AND " +
-                "[confirmed_by_user_id] IS NOT NULL AND " +
-                "[confirmation_request_id] IS NOT NULL" +
+                "confirmed_at IS NOT NULL AND " +
+                "confirmed_by_user_id IS NOT NULL AND " +
+                "confirmation_request_id IS NOT NULL" +
                 ")");
         });
 

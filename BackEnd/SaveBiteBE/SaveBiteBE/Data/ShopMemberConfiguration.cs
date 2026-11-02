@@ -14,12 +14,12 @@ public class ShopMemberConfiguration
         {
             table.HasCheckConstraint(
                 "ck_shop_members_role",
-                "[member_role] IN ('OWNER', 'STAFF')"
+                "member_role IN ('OWNER', 'STAFF')"
             );
 
             table.HasCheckConstraint(
                 "ck_shop_members_status",
-                "[status] IN ('ACTIVE', 'LOCKED')"
+                "status IN ('ACTIVE', 'LOCKED')"
             );
         });
 

@@ -10,8 +10,9 @@
 	<ItemGroup>
 
 		<!-- OpenAPI & Swagger -->
+		<PackageReference Include="EFCore.NamingConventions" Version="9.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.2" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
 
 		<!-- Entity Framework Core - SQL Server -->

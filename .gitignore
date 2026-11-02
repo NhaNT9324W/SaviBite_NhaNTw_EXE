@@ -47,3 +47,5 @@ extracted_doc_text.txt
 extracted_docx_images/
 *.py
 *.ps1
+
+Migrations_SqlServer_Backup/

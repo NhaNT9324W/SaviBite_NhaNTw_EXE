@@ -19,7 +19,7 @@ public static class OrdersModelConfiguration
         {
             table.HasCheckConstraint(
     "ck_orders_status",
-    "[status] IN (" +
+    "status IN (" +
     "'PENDING_PAYMENT', 'PAID', 'CONFIRMED', " +
     "'READY', 'READY_FOR_PICKUP', 'COMPLETED', " +
     "'CANCELLED', 'EXPIRED', " +
@@ -27,16 +27,16 @@ public static class OrdersModelConfiguration
 
             table.HasCheckConstraint(
             "ck_orders_payment_status",
-            "[payment_status] IN (" +
+            "payment_status IN (" +
             "'UNPAID', 'PAID', 'FAILED', 'REFUNDED')");
 
             table.HasCheckConstraint(
                 "ck_orders_total_amount",
-                "[total_amount] > 0");
+                "total_amount > 0");
 
             table.HasCheckConstraint(
                 "ck_orders_payment_expiry",
-                "[payment_expires_at] > [created_at]");
+                "payment_expires_at > created_at");
         });
 
         order.HasKey(x => x.Id);
@@ -157,23 +157,23 @@ public static class OrdersModelConfiguration
         {
             table.HasCheckConstraint(
                 "ck_order_items_quantity",
-                "[quantity] > 0");
+                "quantity > 0");
 
             table.HasCheckConstraint(
                 "ck_order_items_price",
-                "[unit_price] > 0 AND [original_value] > 0");
+                "unit_price > 0 AND original_value > 0");
 
             table.HasCheckConstraint(
                 "ck_order_items_total",
-                "[line_total] = [unit_price] * [quantity]");
+                "line_total = unit_price * quantity");
 
             table.HasCheckConstraint(
                 "ck_order_items_type",
-                "[offer_type] IN ('FLASH_SALE', 'SAVIBITE_BOX')");
+                "offer_type IN ('FLASH_SALE', 'SAVIBITE_BOX')");
 
             table.HasCheckConstraint(
                 "ck_order_items_pickup",
-                "[pickup_start_at] < [pickup_end_at]");
+                "pickup_start_at < pickup_end_at");
         });
 
         item.HasKey(x => x.Id);
