@@ -1,5 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+using Npgsql;
+﻿using Microsoft.EntityFrameworkCore;
 using SaveBiteBE.Data;
 using SaveBiteBE.Entities;
 
@@ -123,10 +123,7 @@ public class ProfileService(
             await db.SaveChangesAsync(cancellationToken);
         }
         catch (DbUpdateException exception)
-            when (
-                exception.InnerException is SqlException sql &&
-                sql.Number is 2601 or 2627
-            )
+            when (exception.InnerException is PostgresException pg && pg.SqlState == "23505")
         {
             // Unique index tiếp tục bảo vệ khi có request đồng thời.
             throw new ProfileFailure(

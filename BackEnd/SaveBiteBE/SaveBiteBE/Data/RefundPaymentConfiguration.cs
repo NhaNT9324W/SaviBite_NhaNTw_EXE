@@ -14,15 +14,15 @@ public sealed class RefundPaymentConfiguration
         {
             table.HasCheckConstraint(
                 "ck_refund_payments_amount",
-                "[amount] > 0");
+                "amount > 0");
 
             table.HasCheckConstraint(
                 "ck_refund_payments_provider",
-                "[provider] = 'MOCK'");
+                "provider = 'MOCK'");
 
             table.HasCheckConstraint(
                 "ck_refund_payments_status",
-                "[status] = 'SUCCESS'");
+                "status = 'SUCCESS'");
         });
 
         builder.HasKey(x => x.Id);

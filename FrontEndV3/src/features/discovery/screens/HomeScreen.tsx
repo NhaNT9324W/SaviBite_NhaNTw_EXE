@@ -27,6 +27,7 @@ import {
 } from '../../../shared/theme';
 
 import FeaturedOffers from '../components/FeaturedOffers';
+import HomeCarousel from '../components/HomeCarousel';
 
 const HOW_IT_WORKS = [
   {
@@ -157,6 +158,8 @@ export default function HomeScreen() {
           </View>
         </ScreenContainer>
       </View>
+      {/* ================= PROMOTIONAL CAROUSEL ================= */}
+      <HomeCarousel />
 
       {/* ================= CATEGORIES ================= */}
       <ScreenContainer style={styles.section}>

@@ -1,5 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+using Npgsql;
+﻿using Microsoft.EntityFrameworkCore;
 using SaveBiteBE.Data;
 using SaveBiteBE.Entities;
 
@@ -233,10 +233,7 @@ public class ShopMemberService(
             );
         }
         catch (DbUpdateException exception)
-            when (
-                exception.InnerException is SqlException sql &&
-                (sql.Number == 2601 || sql.Number == 2627)
-            )
+            when (exception.InnerException is PostgresException pg && pg.SqlState == "23505")
         {
             throw new ShopOperationFailure(
                 409,

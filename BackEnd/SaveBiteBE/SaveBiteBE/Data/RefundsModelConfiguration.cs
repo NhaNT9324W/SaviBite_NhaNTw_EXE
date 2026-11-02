@@ -13,21 +13,21 @@ public static class RefundsModelConfiguration
         {
             table.HasCheckConstraint(
                 "ck_refund_requests_status",
-                "[status] IN ('PENDING', 'APPROVED', 'REJECTED', 'REFUNDED')");
+                "status IN ('PENDING', 'APPROVED', 'REJECTED', 'REFUNDED')");
 
             table.HasCheckConstraint(
                 "ck_refund_requests_amount",
-                "[requested_amount] > 0");
+                "requested_amount > 0");
 
             table.HasCheckConstraint(
                 "ck_refund_requests_approved_amount",
-                "[approved_amount] IS NULL OR " +
-                "([approved_amount] >= 0 AND " +
-                "[approved_amount] <= [requested_amount])");
+                "approved_amount IS NULL OR " +
+                "(approved_amount >= 0 AND " +
+                "approved_amount <= requested_amount)");
 
             table.HasCheckConstraint(
                 "ck_refund_requests_deadline",
-                "[created_at] < [deadline_at]");
+                "created_at < deadline_at");
         });
 
         request.HasKey(x => x.Id);
@@ -94,7 +94,7 @@ public static class RefundsModelConfiguration
 
         request.HasIndex(x => x.OrderId)
             .IsUnique()
-            .HasFilter("[status] = 'PENDING'")
+            .HasFilter("status = 'PENDING'")
             .HasDatabaseName("ux_refund_requests_pending_order");
 
         request.HasIndex(x => new { x.Status, x.CreatedAt })

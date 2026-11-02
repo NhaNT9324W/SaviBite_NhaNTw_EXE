@@ -2,8 +2,8 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SaveBiteBE.Data;
 
 #nullable disable
@@ -17,57 +17,60 @@ namespace SaveBiteBE.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.11")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("ProductVersion", "9.0.2")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("SaveBiteBE.Entities.AuditLog", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<string>("Action")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("action");
 
                     b.Property<Guid>("ActorUserId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("actor_user_id");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
                     b.Property<string>("NewValuesJson")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("new_values_json");
 
                     b.Property<string>("OldValuesJson")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("old_values_json");
 
                     b.Property<Guid>("TargetId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("target_id");
 
                     b.Property<string>("TargetType")
                         .IsRequired()
                         .HasMaxLength(60)
-                        .HasColumnType("nvarchar(60)")
+                        .HasColumnType("character varying(60)")
                         .HasColumnName("target_type");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_audit_logs");
 
-                    b.HasIndex("ActorUserId");
+                    b.HasIndex("ActorUserId")
+                        .HasDatabaseName("ix_audit_logs_actor_user_id");
 
-                    b.HasIndex("Action", "CreatedAt");
+                    b.HasIndex("Action", "CreatedAt")
+                        .HasDatabaseName("ix_audit_logs_action_created_at");
 
                     b.ToTable("audit_logs", (string)null);
                 });
@@ -76,35 +79,37 @@ namespace SaveBiteBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("name");
 
                     b.Property<string>("Slug")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("slug");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("status");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_categories");
 
                     b.HasIndex("Slug")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_categories_slug");
 
                     b.ToTable("categories", (string)null);
                 });
@@ -113,125 +118,129 @@ namespace SaveBiteBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<string>("AllergyInfo")
                         .IsRequired()
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
+                        .HasColumnType("character varying(1000)")
                         .HasColumnName("allergy_info");
 
                     b.Property<int>("AvailableQuantity")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("available_quantity");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
                     b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleted_at");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)")
+                        .HasColumnType("character varying(2000)")
                         .HasColumnName("description");
 
                     b.Property<string>("ImageUrl")
                         .HasMaxLength(2048)
-                        .HasColumnType("nvarchar(2048)")
+                        .HasColumnType("character varying(2048)")
                         .HasColumnName("image_url");
 
                     b.Property<int>("InitialQuantity")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("initial_quantity");
 
                     b.Property<string>("OfferType")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("offer_type");
 
                     b.Property<decimal>("OriginalValue")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("numeric(18,2)")
                         .HasColumnName("original_value");
 
                     b.Property<DateTime>("PickupEndAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("pickup_end_at");
 
                     b.Property<DateTime>("PickupStartAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("pickup_start_at");
 
                     b.Property<Guid?>("ProductId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("product_id");
 
                     b.Property<DateTime>("SaleEndAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("sale_end_at");
 
                     b.Property<decimal>("SalePrice")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("numeric(18,2)")
                         .HasColumnName("sale_price");
 
                     b.Property<DateTime>("SaleStartAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("sale_start_at");
 
                     b.Property<Guid>("ShopId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("shop_id");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("status");
 
                     b.Property<string>("StorageInstruction")
                         .IsRequired()
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
+                        .HasColumnType("character varying(1000)")
                         .HasColumnName("storage_instruction");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
+                        .HasColumnType("character varying(200)")
                         .HasColumnName("title");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_offers");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductId")
+                        .HasDatabaseName("ix_offers_product_id");
 
-                    b.HasIndex("ShopId");
+                    b.HasIndex("ShopId")
+                        .HasDatabaseName("ix_offers_shop_id");
 
-                    b.HasIndex("Status", "SaleEndAt", "Id");
+                    b.HasIndex("Status", "SaleEndAt", "Id")
+                        .HasDatabaseName("ix_offers_status_sale_end_at_id");
 
                     b.ToTable("offers", null, t =>
                         {
-                            t.HasCheckConstraint("ck_offers_flash_product", "[offer_type] <> 'FLASH_SALE' OR [product_id] IS NOT NULL");
+                            t.HasCheckConstraint("ck_offers_flash_product", "offer_type <> 'FLASH_SALE' OR product_id IS NOT NULL");
 
-                            t.HasCheckConstraint("ck_offers_pickup_time", "[pickup_start_at] < [pickup_end_at]");
+                            t.HasCheckConstraint("ck_offers_pickup_time", "pickup_start_at < pickup_end_at");
 
-                            t.HasCheckConstraint("ck_offers_price", "[sale_price] > 0 AND [sale_price] < [original_value]");
+                            t.HasCheckConstraint("ck_offers_price", "sale_price > 0 AND sale_price < original_value");
 
-                            t.HasCheckConstraint("ck_offers_quantity", "[initial_quantity] >= 0 AND [available_quantity] >= 0 AND [available_quantity] <= [initial_quantity]");
+                            t.HasCheckConstraint("ck_offers_quantity", "initial_quantity >= 0 AND available_quantity >= 0 AND available_quantity <= initial_quantity");
 
-                            t.HasCheckConstraint("ck_offers_sale_time", "[sale_start_at] < [sale_end_at]");
+                            t.HasCheckConstraint("ck_offers_sale_time", "sale_start_at < sale_end_at");
 
-                            t.HasCheckConstraint("ck_offers_type", "[offer_type] IN ('FLASH_SALE', 'SAVIBITE_BOX')");
+                            t.HasCheckConstraint("ck_offers_type", "offer_type IN ('FLASH_SALE', 'SAVIBITE_BOX')");
                         });
                 });
 
@@ -239,99 +248,101 @@ namespace SaveBiteBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
                     b.Property<string>("Note")
                         .IsRequired()
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
+                        .HasColumnType("character varying(1000)")
                         .HasColumnName("note");
 
                     b.Property<string>("OrderNumber")
                         .IsRequired()
                         .HasMaxLength(40)
-                        .HasColumnType("nvarchar(40)")
+                        .HasColumnType("character varying(40)")
                         .HasColumnName("order_number");
 
                     b.Property<DateTime>("PaymentExpiresAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("payment_expires_at");
 
                     b.Property<string>("PaymentStatus")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("payment_status");
 
                     b.Property<string>("ReceiverName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("receiver_name");
 
                     b.Property<string>("ReceiverPhone")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("receiver_phone");
 
                     b.Property<string>("RequestHash")
                         .IsRequired()
                         .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)")
+                        .HasColumnType("character varying(64)")
                         .HasColumnName("request_hash");
 
                     b.Property<Guid>("RequestId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("request_id");
 
                     b.Property<string>("ShopAddress")
                         .IsRequired()
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
+                        .HasColumnType("character varying(1000)")
                         .HasColumnName("shop_address");
 
                     b.Property<Guid>("ShopId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("shop_id");
 
                     b.Property<string>("ShopName")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
+                        .HasColumnType("character varying(200)")
                         .HasColumnName("shop_name");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
+                        .HasColumnType("character varying(30)")
                         .HasColumnName("status");
 
                     b.Property<decimal>("TotalAmount")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("numeric(18,2)")
                         .HasColumnName("total_amount");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_orders");
 
                     b.HasIndex("OrderNumber")
                         .IsUnique()
                         .HasDatabaseName("ux_orders_order_number");
 
-                    b.HasIndex("ShopId");
+                    b.HasIndex("ShopId")
+                        .HasDatabaseName("ix_orders_shop_id");
 
                     b.HasIndex("Status", "PaymentExpiresAt")
                         .HasDatabaseName("ix_orders_expiry");
@@ -345,13 +356,13 @@ namespace SaveBiteBE.Migrations
 
                     b.ToTable("orders", null, t =>
                         {
-                            t.HasCheckConstraint("ck_orders_payment_expiry", "[payment_expires_at] > [created_at]");
+                            t.HasCheckConstraint("ck_orders_payment_expiry", "payment_expires_at > created_at");
 
-                            t.HasCheckConstraint("ck_orders_payment_status", "[payment_status] IN ('UNPAID', 'PAID', 'FAILED', 'REFUNDED')");
+                            t.HasCheckConstraint("ck_orders_payment_status", "payment_status IN ('UNPAID', 'PAID', 'FAILED', 'REFUNDED')");
 
-                            t.HasCheckConstraint("ck_orders_status", "[status] IN ('PENDING_PAYMENT', 'PAID', 'CONFIRMED', 'READY', 'READY_FOR_PICKUP', 'COMPLETED', 'CANCELLED', 'EXPIRED', 'REFUND_REQUESTED', 'REFUNDED')");
+                            t.HasCheckConstraint("ck_orders_status", "status IN ('PENDING_PAYMENT', 'PAID', 'CONFIRMED', 'READY', 'READY_FOR_PICKUP', 'COMPLETED', 'CANCELLED', 'EXPIRED', 'REFUND_REQUESTED', 'REFUNDED')");
 
-                            t.HasCheckConstraint("ck_orders_total_amount", "[total_amount] > 0");
+                            t.HasCheckConstraint("ck_orders_total_amount", "total_amount > 0");
                         });
                 });
 
@@ -359,76 +370,78 @@ namespace SaveBiteBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<string>("AllergyInfo")
                         .IsRequired()
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
+                        .HasColumnType("character varying(1000)")
                         .HasColumnName("allergy_info");
 
                     b.Property<string>("ImageUrl")
                         .HasMaxLength(2048)
-                        .HasColumnType("nvarchar(2048)")
+                        .HasColumnType("character varying(2048)")
                         .HasColumnName("image_url");
 
                     b.Property<decimal>("LineTotal")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("numeric(18,2)")
                         .HasColumnName("line_total");
 
                     b.Property<Guid>("OfferId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("offer_id");
 
                     b.Property<string>("OfferTitle")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
+                        .HasColumnType("character varying(200)")
                         .HasColumnName("offer_title");
 
                     b.Property<string>("OfferType")
                         .IsRequired()
                         .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
+                        .HasColumnType("character varying(30)")
                         .HasColumnName("offer_type");
 
                     b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("order_id");
 
                     b.Property<decimal>("OriginalValue")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("numeric(18,2)")
                         .HasColumnName("original_value");
 
                     b.Property<DateTime>("PickupEndAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("pickup_end_at");
 
                     b.Property<DateTime>("PickupStartAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("pickup_start_at");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("quantity");
 
                     b.Property<string>("StorageInstruction")
                         .IsRequired()
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
+                        .HasColumnType("character varying(1000)")
                         .HasColumnName("storage_instruction");
 
                     b.Property<decimal>("UnitPrice")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("numeric(18,2)")
                         .HasColumnName("unit_price");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_order_items");
 
-                    b.HasIndex("OfferId");
+                    b.HasIndex("OfferId")
+                        .HasDatabaseName("ix_order_items_offer_id");
 
                     b.HasIndex("OrderId", "OfferId")
                         .IsUnique()
@@ -436,15 +449,15 @@ namespace SaveBiteBE.Migrations
 
                     b.ToTable("order_items", null, t =>
                         {
-                            t.HasCheckConstraint("ck_order_items_pickup", "[pickup_start_at] < [pickup_end_at]");
+                            t.HasCheckConstraint("ck_order_items_pickup", "pickup_start_at < pickup_end_at");
 
-                            t.HasCheckConstraint("ck_order_items_price", "[unit_price] > 0 AND [original_value] > 0");
+                            t.HasCheckConstraint("ck_order_items_price", "unit_price > 0 AND original_value > 0");
 
-                            t.HasCheckConstraint("ck_order_items_quantity", "[quantity] > 0");
+                            t.HasCheckConstraint("ck_order_items_quantity", "quantity > 0");
 
-                            t.HasCheckConstraint("ck_order_items_total", "[line_total] = [unit_price] * [quantity]");
+                            t.HasCheckConstraint("ck_order_items_total", "line_total = unit_price * quantity");
 
-                            t.HasCheckConstraint("ck_order_items_type", "[offer_type] IN ('FLASH_SALE', 'SAVIBITE_BOX')");
+                            t.HasCheckConstraint("ck_order_items_type", "offer_type IN ('FLASH_SALE', 'SAVIBITE_BOX')");
                         });
                 });
 
@@ -452,45 +465,46 @@ namespace SaveBiteBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<decimal>("Amount")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("numeric(18,2)")
                         .HasColumnName("amount");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
                     b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("order_id");
 
                     b.Property<string>("Provider")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("provider");
 
                     b.Property<Guid>("RequestId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("request_id");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("status");
 
                     b.Property<string>("TransactionReference")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("transaction_reference");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_payments");
 
                     b.HasIndex("OrderId")
                         .IsUnique()
@@ -502,11 +516,11 @@ namespace SaveBiteBE.Migrations
 
                     b.ToTable("payments", null, t =>
                         {
-                            t.HasCheckConstraint("ck_payments_amount", "[amount] > 0");
+                            t.HasCheckConstraint("ck_payments_amount", "amount > 0");
 
-                            t.HasCheckConstraint("ck_payments_provider", "[provider] = 'MOCK'");
+                            t.HasCheckConstraint("ck_payments_provider", "provider = 'MOCK'");
 
-                            t.HasCheckConstraint("ck_payments_status", "[status] IN ('SUCCESS', 'FAILED')");
+                            t.HasCheckConstraint("ck_payments_status", "status IN ('SUCCESS', 'FAILED')");
                         });
                 });
 
@@ -514,42 +528,44 @@ namespace SaveBiteBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<Guid?>("ConfirmationRequestId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("confirmation_request_id");
 
                     b.Property<DateTime?>("ConfirmedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("confirmed_at");
 
                     b.Property<Guid?>("ConfirmedByUserId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("confirmed_by_user_id");
 
                     b.Property<DateTime>("IssuedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("issued_at");
 
                     b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("order_id");
 
                     b.Property<string>("PickupCode")
                         .IsRequired()
                         .HasMaxLength(12)
-                        .HasColumnType("nvarchar(12)")
+                        .HasColumnType("character varying(12)")
                         .HasColumnName("pickup_code");
 
                     b.Property<Guid>("ShopId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("shop_id");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_pickup_confirmations");
 
-                    b.HasIndex("ConfirmedByUserId");
+                    b.HasIndex("ConfirmedByUserId")
+                        .HasDatabaseName("ix_pickup_confirmations_confirmed_by_user_id");
 
                     b.HasIndex("OrderId")
                         .IsUnique()
@@ -559,11 +575,12 @@ namespace SaveBiteBE.Migrations
                         .IsUnique()
                         .HasDatabaseName("ux_pickup_confirmations_code");
 
-                    b.HasIndex("ShopId");
+                    b.HasIndex("ShopId")
+                        .HasDatabaseName("ix_pickup_confirmations_shop_id");
 
                     b.ToTable("pickup_confirmations", null, t =>
                         {
-                            t.HasCheckConstraint("ck_pickup_confirmation_fields", "([confirmed_at] IS NULL AND [confirmed_by_user_id] IS NULL AND [confirmation_request_id] IS NULL) OR ([confirmed_at] IS NOT NULL AND [confirmed_by_user_id] IS NOT NULL AND [confirmation_request_id] IS NOT NULL)");
+                            t.HasCheckConstraint("ck_pickup_confirmation_fields", "(confirmed_at IS NULL AND confirmed_by_user_id IS NULL AND confirmation_request_id IS NULL) OR (confirmed_at IS NOT NULL AND confirmed_by_user_id IS NOT NULL AND confirmation_request_id IS NOT NULL)");
                         });
                 });
 
@@ -571,86 +588,90 @@ namespace SaveBiteBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<string>("AllergyInfo")
                         .IsRequired()
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
+                        .HasColumnType("character varying(1000)")
                         .HasColumnName("allergy_info");
 
                     b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("category_id");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
                     b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleted_at");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)")
+                        .HasColumnType("character varying(2000)")
                         .HasColumnName("description");
 
                     b.Property<string>("ImageUrl")
                         .HasMaxLength(2048)
-                        .HasColumnType("nvarchar(2048)")
+                        .HasColumnType("character varying(2048)")
                         .HasColumnName("image_url");
 
                     b.Property<string>("Ingredients")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)")
+                        .HasColumnType("character varying(2000)")
                         .HasColumnName("ingredients");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)")
+                        .HasColumnType("character varying(150)")
                         .HasColumnName("name");
 
                     b.Property<decimal>("OriginalPrice")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("numeric(18,2)")
                         .HasColumnName("original_price");
 
                     b.Property<Guid>("ShopId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("shop_id");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("status");
 
                     b.Property<string>("StorageInstruction")
                         .IsRequired()
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
+                        .HasColumnType("character varying(1000)")
                         .HasColumnName("storage_instruction");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_products");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("CategoryId")
+                        .HasDatabaseName("ix_products_category_id");
 
-                    b.HasIndex("ShopId");
+                    b.HasIndex("ShopId")
+                        .HasDatabaseName("ix_products_shop_id");
 
-                    b.HasIndex("Status");
+                    b.HasIndex("Status")
+                        .HasDatabaseName("ix_products_status");
 
                     b.ToTable("products", null, t =>
                         {
-                            t.HasCheckConstraint("ck_products_original_price", "[original_price] > 0");
+                            t.HasCheckConstraint("ck_products_original_price", "original_price > 0");
                         });
                 });
 
@@ -658,37 +679,40 @@ namespace SaveBiteBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
                     b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("expires_at");
 
                     b.Property<DateTime?>("RevokedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("revoked_at");
 
                     b.Property<string>("TokenHash")
                         .IsRequired()
                         .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)")
+                        .HasColumnType("character varying(64)")
                         .HasColumnName("token_hash");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_refresh_tokens");
 
                     b.HasIndex("TokenHash")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_refresh_tokens_token_hash");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_refresh_tokens_user_id");
 
                     b.ToTable("refresh_tokens", (string)null);
                 });
@@ -697,11 +721,11 @@ namespace SaveBiteBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
                     b.Property<long>("FileSize")
@@ -711,22 +735,24 @@ namespace SaveBiteBE.Migrations
                     b.Property<string>("FileType")
                         .IsRequired()
                         .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
+                        .HasColumnType("character varying(30)")
                         .HasColumnName("file_type");
 
                     b.Property<Guid>("RefundRequestId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("refund_request_id");
 
                     b.Property<string>("StoredFileName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("stored_file_name");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_refund_evidences");
 
-                    b.HasIndex("RefundRequestId");
+                    b.HasIndex("RefundRequestId")
+                        .HasDatabaseName("ix_refund_evidences_refund_request_id");
 
                     b.ToTable("refund_evidences", (string)null);
                 });
@@ -735,68 +761,73 @@ namespace SaveBiteBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<decimal>("Amount")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("numeric(18,2)")
                         .HasColumnName("amount");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
                     b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("order_id");
 
                     b.Property<Guid>("PaymentId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("payment_id");
 
                     b.Property<string>("Provider")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("provider");
 
                     b.Property<Guid>("RefundRequestId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("refund_request_id");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("status");
 
                     b.Property<string>("TransactionReference")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("transaction_reference");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_refund_payments");
 
                     b.HasIndex("OrderId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_refund_payments_order_id");
 
-                    b.HasIndex("PaymentId");
+                    b.HasIndex("PaymentId")
+                        .HasDatabaseName("ix_refund_payments_payment_id");
 
                     b.HasIndex("RefundRequestId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_refund_payments_refund_request_id");
 
                     b.HasIndex("TransactionReference")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_refund_payments_transaction_reference");
 
                     b.ToTable("refund_payments", null, t =>
                         {
-                            t.HasCheckConstraint("ck_refund_payments_amount", "[amount] > 0");
+                            t.HasCheckConstraint("ck_refund_payments_amount", "amount > 0");
 
-                            t.HasCheckConstraint("ck_refund_payments_provider", "[provider] = 'MOCK'");
+                            t.HasCheckConstraint("ck_refund_payments_provider", "provider = 'MOCK'");
 
-                            t.HasCheckConstraint("ck_refund_payments_status", "[status] = 'SUCCESS'");
+                            t.HasCheckConstraint("ck_refund_payments_status", "status = 'SUCCESS'");
                         });
                 });
 
@@ -804,97 +835,100 @@ namespace SaveBiteBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<decimal?>("ApprovedAmount")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("numeric(18,2)")
                         .HasColumnName("approved_amount");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
                     b.Property<DateTime>("DeadlineAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("deadline_at");
 
                     b.Property<Guid?>("HandledByUserId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("handled_by_user_id");
 
                     b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("order_id");
 
                     b.Property<string>("OrderNumber")
                         .IsRequired()
                         .HasMaxLength(40)
-                        .HasColumnType("nvarchar(40)")
+                        .HasColumnType("character varying(40)")
                         .HasColumnName("order_number");
 
                     b.Property<string>("Reason")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)")
+                        .HasColumnType("character varying(2000)")
                         .HasColumnName("reason");
 
                     b.Property<string>("RequestHash")
                         .IsRequired()
                         .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)")
+                        .HasColumnType("character varying(64)")
                         .HasColumnName("request_hash");
 
                     b.Property<Guid>("RequestId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("request_id");
 
                     b.Property<decimal>("RequestedAmount")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("numeric(18,2)")
                         .HasColumnName("requested_amount");
 
                     b.Property<string>("ResolutionNote")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)")
+                        .HasColumnType("character varying(2000)")
                         .HasColumnName("resolution_note");
 
                     b.Property<DateTime?>("ResolvedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("resolved_at");
 
                     b.Property<Guid>("ShopId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("shop_id");
 
                     b.Property<string>("ShopName")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
+                        .HasColumnType("character varying(200)")
                         .HasColumnName("shop_name");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("status");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_refund_requests");
 
-                    b.HasIndex("HandledByUserId");
+                    b.HasIndex("HandledByUserId")
+                        .HasDatabaseName("ix_refund_requests_handled_by_user_id");
 
                     b.HasIndex("OrderId")
                         .IsUnique()
                         .HasDatabaseName("ux_refund_requests_pending_order")
-                        .HasFilter("[status] = 'PENDING'");
+                        .HasFilter("status = 'PENDING'");
 
-                    b.HasIndex("ShopId");
+                    b.HasIndex("ShopId")
+                        .HasDatabaseName("ix_refund_requests_shop_id");
 
                     b.HasIndex("Status", "CreatedAt")
                         .HasDatabaseName("ix_refund_requests_status_created");
@@ -905,13 +939,13 @@ namespace SaveBiteBE.Migrations
 
                     b.ToTable("refund_requests", null, t =>
                         {
-                            t.HasCheckConstraint("ck_refund_requests_amount", "[requested_amount] > 0");
+                            t.HasCheckConstraint("ck_refund_requests_amount", "requested_amount > 0");
 
-                            t.HasCheckConstraint("ck_refund_requests_approved_amount", "[approved_amount] IS NULL OR ([approved_amount] >= 0 AND [approved_amount] <= [requested_amount])");
+                            t.HasCheckConstraint("ck_refund_requests_approved_amount", "approved_amount IS NULL OR (approved_amount >= 0 AND approved_amount <= requested_amount)");
 
-                            t.HasCheckConstraint("ck_refund_requests_deadline", "[created_at] < [deadline_at]");
+                            t.HasCheckConstraint("ck_refund_requests_deadline", "created_at < deadline_at");
 
-                            t.HasCheckConstraint("ck_refund_requests_status", "[status] IN ('PENDING', 'APPROVED', 'REJECTED', 'REFUNDED')");
+                            t.HasCheckConstraint("ck_refund_requests_status", "status IN ('PENDING', 'APPROVED', 'REJECTED', 'REFUNDED')");
                         });
                 });
 
@@ -919,67 +953,69 @@ namespace SaveBiteBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<string>("Comment")
                         .IsRequired()
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
+                        .HasColumnType("character varying(1000)")
                         .HasColumnName("comment");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
                     b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleted_at");
 
                     b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("order_id");
 
                     b.Property<int>("Rating")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("rating");
 
                     b.Property<string>("ReviewerName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("reviewer_name");
 
                     b.Property<Guid>("ShopId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("shop_id");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("status");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_reviews");
 
                     b.HasIndex("OrderId")
                         .IsUnique()
                         .HasDatabaseName("ux_reviews_order");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_reviews_user_id");
 
                     b.HasIndex("ShopId", "CreatedAt")
                         .HasDatabaseName("ix_reviews_shop_created");
 
                     b.ToTable("reviews", null, t =>
                         {
-                            t.HasCheckConstraint("ck_reviews_rating", "[rating] >= 1 AND [rating] <= 5");
+                            t.HasCheckConstraint("ck_reviews_rating", "rating >= 1 AND rating <= 5");
 
-                            t.HasCheckConstraint("ck_reviews_status", "[status] IN ('ACTIVE', 'HIDDEN')");
+                            t.HasCheckConstraint("ck_reviews_status", "status IN ('ACTIVE', 'HIDDEN')");
                         });
                 });
 
@@ -987,81 +1023,84 @@ namespace SaveBiteBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)")
+                        .HasColumnType("character varying(500)")
                         .HasColumnName("address");
 
                     b.Property<decimal>("AverageRating")
                         .HasPrecision(3, 2)
-                        .HasColumnType("decimal(3,2)")
+                        .HasColumnType("numeric(3,2)")
                         .HasColumnName("average_rating");
 
                     b.Property<string>("CoverUrl")
                         .HasMaxLength(2048)
-                        .HasColumnType("nvarchar(2048)")
+                        .HasColumnType("character varying(2048)")
                         .HasColumnName("cover_url");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
                     b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleted_at");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)")
+                        .HasColumnType("character varying(2000)")
                         .HasColumnName("description");
 
                     b.Property<decimal?>("Latitude")
                         .HasPrecision(10, 7)
-                        .HasColumnType("decimal(10,7)")
+                        .HasColumnType("numeric(10,7)")
                         .HasColumnName("latitude");
 
                     b.Property<string>("LogoUrl")
                         .HasMaxLength(2048)
-                        .HasColumnType("nvarchar(2048)")
+                        .HasColumnType("character varying(2048)")
                         .HasColumnName("logo_url");
 
                     b.Property<decimal?>("Longitude")
                         .HasPrecision(10, 7)
-                        .HasColumnType("decimal(10,7)")
+                        .HasColumnType("numeric(10,7)")
                         .HasColumnName("longitude");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)")
+                        .HasColumnType("character varying(150)")
                         .HasColumnName("name");
 
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("phone");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("status");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_shops");
 
-                    b.HasIndex("Name");
+                    b.HasIndex("Name")
+                        .HasDatabaseName("ix_shops_name");
 
-                    b.HasIndex("Status");
+                    b.HasIndex("Status")
+                        .HasDatabaseName("ix_shops_status");
 
                     b.ToTable("shops", (string)null);
                 });
@@ -1070,38 +1109,39 @@ namespace SaveBiteBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleted_at");
 
                     b.Property<DateTime>("JoinedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("joined_at");
 
                     b.Property<string>("MemberRole")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("member_role");
 
                     b.Property<Guid>("ShopId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("shop_id");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("status");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_shop_members");
 
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_shop_members_user");
@@ -1112,9 +1152,9 @@ namespace SaveBiteBE.Migrations
 
                     b.ToTable("shop_members", null, t =>
                         {
-                            t.HasCheckConstraint("ck_shop_members_role", "[member_role] IN ('OWNER', 'STAFF')");
+                            t.HasCheckConstraint("ck_shop_members_role", "member_role IN ('OWNER', 'STAFF')");
 
-                            t.HasCheckConstraint("ck_shop_members_status", "[status] IN ('ACTIVE', 'LOCKED')");
+                            t.HasCheckConstraint("ck_shop_members_status", "status IN ('ACTIVE', 'LOCKED')");
                         });
                 });
 
@@ -1122,63 +1162,64 @@ namespace SaveBiteBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<string>("AvatarUrl")
                         .HasMaxLength(2048)
-                        .HasColumnType("nvarchar(2048)")
+                        .HasColumnType("character varying(2048)")
                         .HasColumnName("avatar_url");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
                     b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleted_at");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(254)
-                        .HasColumnType("nvarchar(254)")
+                        .HasColumnType("character varying(254)")
                         .HasColumnName("email");
 
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("full_name");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)")
+                        .HasColumnType("character varying(512)")
                         .HasColumnName("password_hash");
 
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("phone");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("status");
 
                     b.Property<string>("SystemRole")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("system_role");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_users");
 
                     b.HasIndex("Email")
                         .IsUnique()
@@ -1197,7 +1238,8 @@ namespace SaveBiteBE.Migrations
                         .WithMany()
                         .HasForeignKey("ActorUserId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_audit_logs_users_actor_user_id");
 
                     b.Navigation("ActorUser");
                 });
@@ -1207,13 +1249,15 @@ namespace SaveBiteBE.Migrations
                     b.HasOne("SaveBiteBE.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_offers_products_product_id");
 
                     b.HasOne("SaveBiteBE.Entities.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_offers_shops_shop_id");
 
                     b.Navigation("Product");
 
@@ -1226,13 +1270,15 @@ namespace SaveBiteBE.Migrations
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_orders_shops_shop_id");
 
                     b.HasOne("SaveBiteBE.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_orders_users_user_id");
 
                     b.Navigation("Shop");
 
@@ -1245,13 +1291,15 @@ namespace SaveBiteBE.Migrations
                         .WithMany()
                         .HasForeignKey("OfferId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_order_items_offers_offer_id");
 
                     b.HasOne("SaveBiteBE.Entities.Order", "Order")
                         .WithMany("Items")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_order_items_orders_order_id");
 
                     b.Navigation("Offer");
 
@@ -1264,7 +1312,8 @@ namespace SaveBiteBE.Migrations
                         .WithMany()
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_payments_orders_order_id");
 
                     b.Navigation("Order");
                 });
@@ -1274,19 +1323,22 @@ namespace SaveBiteBE.Migrations
                     b.HasOne("SaveBiteBE.Entities.User", "ConfirmedByUser")
                         .WithMany()
                         .HasForeignKey("ConfirmedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_pickup_confirmations_users_confirmed_by_user_id");
 
                     b.HasOne("SaveBiteBE.Entities.Order", "Order")
                         .WithMany()
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_pickup_confirmations_orders_order_id");
 
                     b.HasOne("SaveBiteBE.Entities.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_pickup_confirmations_shops_shop_id");
 
                     b.Navigation("ConfirmedByUser");
 
@@ -1301,13 +1353,15 @@ namespace SaveBiteBE.Migrations
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_products_categories_category_id");
 
                     b.HasOne("SaveBiteBE.Entities.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_products_shops_shop_id");
 
                     b.Navigation("Category");
 
@@ -1320,7 +1374,8 @@ namespace SaveBiteBE.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_refresh_tokens_users_user_id");
 
                     b.Navigation("User");
                 });
@@ -1331,7 +1386,8 @@ namespace SaveBiteBE.Migrations
                         .WithMany("Evidences")
                         .HasForeignKey("RefundRequestId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_refund_evidences_refund_requests_refund_request_id");
 
                     b.Navigation("RefundRequest");
                 });
@@ -1342,19 +1398,22 @@ namespace SaveBiteBE.Migrations
                         .WithMany()
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_refund_payments_orders_order_id");
 
                     b.HasOne("SaveBiteBE.Entities.Payment", "Payment")
                         .WithMany()
                         .HasForeignKey("PaymentId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_refund_payments_payments_payment_id");
 
                     b.HasOne("SaveBiteBE.Entities.RefundRequest", "RefundRequest")
                         .WithMany()
                         .HasForeignKey("RefundRequestId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_refund_payments_refund_requests_refund_request_id");
 
                     b.Navigation("Order");
 
@@ -1368,25 +1427,29 @@ namespace SaveBiteBE.Migrations
                     b.HasOne("SaveBiteBE.Entities.User", "HandledByUser")
                         .WithMany()
                         .HasForeignKey("HandledByUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_refund_requests_users_handled_by_user_id");
 
                     b.HasOne("SaveBiteBE.Entities.Order", "Order")
                         .WithMany()
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_refund_requests_orders_order_id");
 
                     b.HasOne("SaveBiteBE.Entities.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_refund_requests_shops_shop_id");
 
                     b.HasOne("SaveBiteBE.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_refund_requests_users_user_id");
 
                     b.Navigation("HandledByUser");
 
@@ -1403,19 +1466,22 @@ namespace SaveBiteBE.Migrations
                         .WithMany()
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_reviews_orders_order_id");
 
                     b.HasOne("SaveBiteBE.Entities.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_reviews_shops_shop_id");
 
                     b.HasOne("SaveBiteBE.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_reviews_users_user_id");
 
                     b.Navigation("Order");
 
@@ -1430,13 +1496,15 @@ namespace SaveBiteBE.Migrations
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_shop_members_shops_shop_id");
 
                     b.HasOne("SaveBiteBE.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_shop_members_users_user_id");
 
                     b.Navigation("Shop");
 

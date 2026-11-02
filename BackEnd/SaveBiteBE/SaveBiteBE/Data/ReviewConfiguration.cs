@@ -13,11 +13,11 @@ public sealed class ReviewConfiguration
         {
             table.HasCheckConstraint(
                 "ck_reviews_rating",
-                "[rating] >= 1 AND [rating] <= 5");
+                "rating >= 1 AND rating <= 5");
 
             table.HasCheckConstraint(
                 "ck_reviews_status",
-                "[status] IN ('ACTIVE', 'HIDDEN')");
+                "status IN ('ACTIVE', 'HIDDEN')");
         });
 
         review.HasKey(x => x.Id);

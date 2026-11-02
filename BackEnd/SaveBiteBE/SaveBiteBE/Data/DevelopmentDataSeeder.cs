@@ -1,4 +1,4 @@
-﻿
+
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
@@ -335,6 +335,115 @@ public static class DevelopmentDataSeeder
         "Chất lượng món ăn chưa đạt yêu cầu."
     ];
 
+    // -------------------------------------------------------
+    // ẢNH THỰC PHẨM - Unsplash (free, stable, không cần API key)
+    // Group 0: Bánh ngọt & Bánh mì
+    // Group 1: Cơm & Món chính
+    // Group 2: Cà phê & Đồ uống
+    // Group 3: Trà & Trà sữa
+    // -------------------------------------------------------
+
+    private static readonly string[][] ProductImages =
+    [
+        // Group 0 - Bánh ngọt & Bánh mì (12 ảnh thực tế từ DOCX)
+        [
+            "http://localhost:5122/uploads/products/tiramisu.png",
+            "http://localhost:5122/uploads/products/banh-kem-dau.png",
+            "http://localhost:5122/uploads/products/donut-socola.png",
+            "http://localhost:5122/uploads/products/donut-dau.png",
+            "http://localhost:5122/uploads/products/croissant-ngot.png",
+            "http://localhost:5122/uploads/products/cupcake-socola.png",
+            "http://localhost:5122/uploads/products/banh-su-kem.png",
+            "http://localhost:5122/uploads/products/banh-bong-lan-trung-muoi.png",
+            "http://localhost:5122/uploads/products/banh-mousse-chanh-day.png",
+            "http://localhost:5122/uploads/products/cheesecake.png",
+            "http://localhost:5122/uploads/products/banh-tart-trung.png",
+            "http://localhost:5122/uploads/products/brownie-socola.png"
+        ],
+        // Group 1 - Cơm, Món chính & Món chay (12 ảnh thực tế từ DOCX)
+        [
+            "http://localhost:5122/uploads/products/com-chay-thap-cam.png",
+            "http://localhost:5122/uploads/products/com-chien-chay.png",
+            "http://localhost:5122/uploads/products/bun-xao-chay.png",
+            "http://localhost:5122/uploads/products/mi-xao-chay.png",
+            "http://localhost:5122/uploads/products/banh-mi-chay.png",
+            "http://localhost:5122/uploads/products/banh-bao-chay.png",
+            "http://localhost:5122/uploads/products/goi-cuon-chay.png",
+            "http://localhost:5122/uploads/products/salad-rau-cu.png",
+            "http://localhost:5122/uploads/products/dau-hu-sot-ca.png",
+            "http://localhost:5122/uploads/products/dau-hu-chien-sa.png",
+            "http://localhost:5122/uploads/products/ca-ri-chay.png",
+            "http://localhost:5122/uploads/products/bun-hue-chay.png"
+        ],
+        // Group 2 - Cà phê & Đồ uống (12 ảnh thực tế từ DOCX)
+        [
+            "http://localhost:5122/uploads/products/ca-phe-sua-da.png",
+            "http://localhost:5122/uploads/products/bac-xiu.png",
+            "http://localhost:5122/uploads/products/tra-sua-tran-chau.png",
+            "http://localhost:5122/uploads/products/tra-dao-cam-sa.png",
+            "http://localhost:5122/uploads/products/tra-chanh.png",
+            "http://localhost:5122/uploads/products/tra-vai.png",
+            "http://localhost:5122/uploads/products/matcha-latte.png",
+            "http://localhost:5122/uploads/products/chocolate-da-xay.png",
+            "http://localhost:5122/uploads/products/nuoc-ep-cam.png",
+            "http://localhost:5122/uploads/products/nuoc-ep-dua-hau.png",
+            "http://localhost:5122/uploads/products/sinh-to-bo.png",
+            "http://localhost:5122/uploads/products/sinh-to-xoai.png"
+        ],
+        // Group 3 - Trà & Trà sữa (12 ảnh thực tế từ DOCX)
+        [
+            "http://localhost:5122/uploads/products/tra-sua-tran-chau.png",
+            "http://localhost:5122/uploads/products/tra-dao-cam-sa.png",
+            "http://localhost:5122/uploads/products/tra-chanh.png",
+            "http://localhost:5122/uploads/products/tra-vai.png",
+            "http://localhost:5122/uploads/products/matcha-latte.png",
+            "http://localhost:5122/uploads/products/chocolate-da-xay.png",
+            "http://localhost:5122/uploads/products/nuoc-ep-cam.png",
+            "http://localhost:5122/uploads/products/nuoc-ep-dua-hau.png",
+            "http://localhost:5122/uploads/products/sinh-to-bo.png",
+            "http://localhost:5122/uploads/products/sinh-to-xoai.png",
+            "http://localhost:5122/uploads/products/ca-phe-sua-da.png",
+            "http://localhost:5122/uploads/products/bac-xiu.png"
+        ]
+    ];
+
+    // Ảnh cho SaviBite Box (hộp thực phẩm bất ngờ) theo nhóm thực phẩm từ DOCX
+    private static readonly string[][] BoxImages =
+    [
+        // Group 0 - Hộp bánh
+        [
+            "http://localhost:5122/uploads/products/croissant-ngot.png",
+            "http://localhost:5122/uploads/products/tiramisu.png",
+            "http://localhost:5122/uploads/products/cheesecake.png",
+            "http://localhost:5122/uploads/products/banh-su-kem.png",
+            "http://localhost:5122/uploads/products/donut-socola.png"
+        ],
+        // Group 1 - Hộp cơm & món chay
+        [
+            "http://localhost:5122/uploads/products/com-chay-thap-cam.png",
+            "http://localhost:5122/uploads/products/com-chien-chay.png",
+            "http://localhost:5122/uploads/products/mi-xao-chay.png",
+            "http://localhost:5122/uploads/products/salad-rau-cu.png",
+            "http://localhost:5122/uploads/products/bun-xao-chay.png"
+        ],
+        // Group 2 - Hộp cà phê
+        [
+            "http://localhost:5122/uploads/products/ca-phe-sua-da.png",
+            "http://localhost:5122/uploads/products/bac-xiu.png",
+            "http://localhost:5122/uploads/products/chocolate-da-xay.png",
+            "http://localhost:5122/uploads/products/matcha-latte.png",
+            "http://localhost:5122/uploads/products/sinh-to-bo.png"
+        ],
+        // Group 3 - Hộp trà sữa & giải nhiệt
+        [
+            "http://localhost:5122/uploads/products/tra-sua-tran-chau.png",
+            "http://localhost:5122/uploads/products/tra-dao-cam-sa.png",
+            "http://localhost:5122/uploads/products/tra-chanh.png",
+            "http://localhost:5122/uploads/products/tra-vai.png",
+            "http://localhost:5122/uploads/products/nuoc-ep-cam.png"
+        ]
+    ];
+
     #endregion
 
     #region 02 - ĐIỀU PHỐI SEEDER
@@ -357,8 +466,7 @@ public static class DevelopmentDataSeeder
 
         if (!string.Equals(
             databaseName,
-            "SaviBiteAuthDev",
-            StringComparison.OrdinalIgnoreCase))
+            "SaviBiteAuthDev", StringComparison.OrdinalIgnoreCase) && !string.Equals(databaseName, "neondb", StringComparison.OrdinalIgnoreCase))
         {
             throw new InvalidOperationException(
                 "Seeder V4 chỉ được phép chạy " +
@@ -823,7 +931,7 @@ public static class DevelopmentDataSeeder
                         ? "INACTIVE"
                         : "ACTIVE",
 
-                    ImageUrl = null,
+                    ImageUrl = ProductImages[group][p % ProductImages[group].Length],
 
                     CreatedAt =
                         shop.CreatedAt.AddDays(2),
@@ -903,7 +1011,7 @@ public static class DevelopmentDataSeeder
             SaleStartAt = start,
             SaleEndAt = end,
 
-            PickupStartAt = end.AddMinutes(15),
+            PickupStartAt = status == "ACTIVE" ? start : end.AddMinutes(15),
             PickupEndAt = end.AddHours(3),
 
             AllergyInfo = product.AllergyInfo,
@@ -911,7 +1019,9 @@ public static class DevelopmentDataSeeder
             StorageInstruction =
                 product.StorageInstruction,
 
-            ImageUrl = null,
+            ImageUrl = isBox
+                ? BoxImages[group][boxIndex % BoxImages[group].Length]
+                : product.ImageUrl,
 
             Status = status,
 
@@ -1016,11 +1126,12 @@ public static class DevelopmentDataSeeder
             // 450 Flash Sale và 150 Box.
             bool isBox = i % 4 == 0;
 
+            // Ưu đãi đang bán hoạt động 24/24 liên tục
             DateTime start =
-                now.AddMinutes(-20);
+                now.AddDays(-1);
 
             DateTime end =
-                now.AddHours(12 + i % 3);
+                now.AddYears(1);
 
             int quantity =
                 random.Next(12, 35);

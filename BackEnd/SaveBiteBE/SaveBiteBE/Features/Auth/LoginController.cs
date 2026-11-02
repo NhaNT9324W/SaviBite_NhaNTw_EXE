@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -54,6 +54,25 @@ public class LoginController(LoginService loginService)
     {
         return ExecuteAsync(async () =>
             await loginService.LoginAsync(
+                request,
+                cancellationToken
+            )
+        );
+    }
+
+    /// <summary>
+    /// Đăng nhập bằng Google OAuth.
+    /// POST http://localhost:5122/api/auth/google
+    /// </summary>
+    [AllowAnonymous]
+    [HttpPost("google")]
+    [EnableRateLimiting("auth-login")]
+    public Task<IActionResult> Google(
+        GoogleLoginRequest request,
+        CancellationToken cancellationToken)
+    {
+        return ExecuteAsync(async () =>
+            await loginService.GoogleLoginAsync(
                 request,
                 cancellationToken
             )

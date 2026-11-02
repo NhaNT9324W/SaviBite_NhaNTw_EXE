@@ -19,6 +19,7 @@ import type {
   AuthSession,
   AuthStatus,
   AuthUser,
+  GoogleLoginRequest,
 } from '../types/auth.types';
 
 const AuthContext =
@@ -296,6 +297,37 @@ export function AuthProvider({
     [clearCart]
   );
 
+  const loginWithGoogle = useCallback(
+    async (request: GoogleLoginRequest): Promise<void> => {
+      const version = ++operationVersionRef.current;
+      const previousSession = sessionRef.current;
+
+      const session = await authApi.loginWithGoogle(request);
+
+      if (version !== operationVersionRef.current) {
+        return;
+      }
+
+      await tokenStorage.set(session);
+
+      if (version !== operationVersionRef.current) {
+        return;
+      }
+
+      if (
+        previousSession &&
+        previousSession.user.id !== session.user.id
+      ) {
+        clearCart();
+      }
+
+      sessionRef.current = session;
+      setUser(session.user);
+      setStatus('authenticated');
+    },
+    [clearCart]
+  );
+
   const logout = useCallback(
     async (): Promise<void> => {
       const session = sessionRef.current;
@@ -461,6 +493,7 @@ export function AuthProvider({
         status === 'authenticated' &&
         user !== null,
       login,
+      loginWithGoogle,
       logout,
       refreshSession,
       getAccessToken,
@@ -470,6 +503,7 @@ export function AuthProvider({
       user,
       status,
       login,
+      loginWithGoogle,
       logout,
       refreshSession,
       getAccessToken,

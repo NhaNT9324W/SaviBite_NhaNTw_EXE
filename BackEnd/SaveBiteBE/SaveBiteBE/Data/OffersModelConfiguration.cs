@@ -98,7 +98,7 @@ public static class OffersModelConfiguration
         {
             table.HasCheckConstraint(
                 "ck_products_original_price",
-                "[original_price] > 0"
+                "original_price > 0"
             );
         });
 
@@ -151,34 +151,34 @@ public static class OffersModelConfiguration
         {
             table.HasCheckConstraint(
                 "ck_offers_type",
-                "[offer_type] IN ('FLASH_SALE', 'SAVIBITE_BOX')"
+                "offer_type IN ('FLASH_SALE', 'SAVIBITE_BOX')"
             );
 
             table.HasCheckConstraint(
                 "ck_offers_price",
-                "[sale_price] > 0 AND [sale_price] < [original_value]"
+                "sale_price > 0 AND sale_price < original_value"
             );
 
             table.HasCheckConstraint(
                 "ck_offers_quantity",
-                "[initial_quantity] >= 0 " +
-                "AND [available_quantity] >= 0 " +
-                "AND [available_quantity] <= [initial_quantity]"
+                "initial_quantity >= 0 " +
+                "AND available_quantity >= 0 " +
+                "AND available_quantity <= initial_quantity"
             );
 
             table.HasCheckConstraint(
                 "ck_offers_sale_time",
-                "[sale_start_at] < [sale_end_at]"
+                "sale_start_at < sale_end_at"
             );
 
             table.HasCheckConstraint(
                 "ck_offers_pickup_time",
-                "[pickup_start_at] < [pickup_end_at]"
+                "pickup_start_at < pickup_end_at"
             );
 
             table.HasCheckConstraint(
                 "ck_offers_flash_product",
-                "[offer_type] <> 'FLASH_SALE' OR [product_id] IS NOT NULL"
+                "offer_type <> 'FLASH_SALE' OR product_id IS NOT NULL"
             );
         });
 
@@ -246,7 +246,7 @@ public static class OffersModelConfiguration
         {
             var columnName = Regex.Replace(
                 property.Name,
-                "([a-z0-9])([A-Z])",
+                "(a-z0-9)(A-Z)",
                 "$1_$2"
             ).ToLowerInvariant();
 

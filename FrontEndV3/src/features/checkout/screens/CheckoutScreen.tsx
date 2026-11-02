@@ -87,6 +87,10 @@ export default function CheckoutScreen() {
 
   const [receiverName, setReceiverName] = useState('');
   const [receiverPhone, setReceiverPhone] = useState('');
+  type PaymentMethod = 'MOMO' | 'VNPAY' | 'QR_CODE' | 'COD';
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('MOMO');
+  const [autoPay, setAutoPay] = useState(true);
+
   const [note, setNote] = useState('');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -197,6 +201,17 @@ export default function CheckoutScreen() {
 
       clearCart();
       requestIdRef.current = null;
+
+      if (autoPay) {
+        try {
+          await orderApi.mockPayment(accessToken, createdOrderId, {
+            requestId: Crypto.randomUUID(),
+            outcome: 'SUCCESS',
+          });
+        } catch {
+          // Bỏ qua lỗi mock payment nếu có, vẫn chuyển đến trang chi tiết đơn
+        }
+      }
 
       router.replace({
         pathname: '/order/[id]',
@@ -429,6 +444,124 @@ export default function CheckoutScreen() {
                   </Text>
                 </View>
               ))}
+            </View>
+
+            {/* PHƯƠNG THỨC THANH TOÁN (MÔ PHỎNG) */}
+            <View style={styles.panel}>
+              <View style={styles.sectionHeading}>
+                <Ionicons
+                  name="card-outline"
+                  size={22}
+                  color={colors.primary}
+                />
+                <Text style={styles.sectionTitle}>
+                  Phương thức thanh toán (Giả lập)
+                </Text>
+              </View>
+
+              <Text style={styles.muted}>
+                Chọn cổng thanh toán mô phỏng để trải nghiệm tính năng:
+              </Text>
+
+              <View style={styles.paymentMethodsList}>
+                <Pressable
+                  style={[
+                    styles.paymentMethodItem,
+                    paymentMethod === 'MOMO' && styles.paymentMethodActive,
+                  ]}
+                  onPress={() => setPaymentMethod('MOMO')}
+                >
+                  <View style={[styles.paymentMethodIconCircle, { backgroundColor: '#A50064' }]}>
+                    <Text style={styles.paymentMethodIconText}>M</Text>
+                  </View>
+                  <View style={styles.paymentMethodInfo}>
+                    <Text style={styles.paymentMethodTitle}>Ví MoMo (Mô phỏng)</Text>
+                    <Text style={styles.paymentMethodSub}>Thanh toán nhanh qua ví MoMo</Text>
+                  </View>
+                  <Ionicons
+                    name={paymentMethod === 'MOMO' ? 'radio-button-on' : 'radio-button-off'}
+                    size={20}
+                    color={paymentMethod === 'MOMO' ? colors.primary : colors.textMuted}
+                  />
+                </Pressable>
+
+                <Pressable
+                  style={[
+                    styles.paymentMethodItem,
+                    paymentMethod === 'VNPAY' && styles.paymentMethodActive,
+                  ]}
+                  onPress={() => setPaymentMethod('VNPAY')}
+                >
+                  <View style={[styles.paymentMethodIconCircle, { backgroundColor: '#005BAA' }]}>
+                    <Text style={styles.paymentMethodIconText}>V</Text>
+                  </View>
+                  <View style={styles.paymentMethodInfo}>
+                    <Text style={styles.paymentMethodTitle}>Cổng VNPAY / Thẻ ATM (Mô phỏng)</Text>
+                    <Text style={styles.paymentMethodSub}>Thẻ ngân hàng nội địa và quốc tế</Text>
+                  </View>
+                  <Ionicons
+                    name={paymentMethod === 'VNPAY' ? 'radio-button-on' : 'radio-button-off'}
+                    size={20}
+                    color={paymentMethod === 'VNPAY' ? colors.primary : colors.textMuted}
+                  />
+                </Pressable>
+
+                <Pressable
+                  style={[
+                    styles.paymentMethodItem,
+                    paymentMethod === 'QR_CODE' && styles.paymentMethodActive,
+                  ]}
+                  onPress={() => setPaymentMethod('QR_CODE')}
+                >
+                  <View style={[styles.paymentMethodIconCircle, { backgroundColor: '#107C41' }]}>
+                    <Ionicons name="qr-code-outline" size={18} color="#fff" />
+                  </View>
+                  <View style={styles.paymentMethodInfo}>
+                    <Text style={styles.paymentMethodTitle}>Chuyển khoản QR Napas 247 (Mô phỏng)</Text>
+                    <Text style={styles.paymentMethodSub}>Quét mã QR từ app ngân hàng</Text>
+                  </View>
+                  <Ionicons
+                    name={paymentMethod === 'QR_CODE' ? 'radio-button-on' : 'radio-button-off'}
+                    size={20}
+                    color={paymentMethod === 'QR_CODE' ? colors.primary : colors.textMuted}
+                  />
+                </Pressable>
+
+                <Pressable
+                  style={[
+                    styles.paymentMethodItem,
+                    paymentMethod === 'COD' && styles.paymentMethodActive,
+                  ]}
+                  onPress={() => setPaymentMethod('COD')}
+                >
+                  <View style={[styles.paymentMethodIconCircle, { backgroundColor: '#F2711C' }]}>
+                    <Ionicons name="cash-outline" size={18} color="#fff" />
+                  </View>
+                  <View style={styles.paymentMethodInfo}>
+                    <Text style={styles.paymentMethodTitle}>Thanh toán tiền mặt khi nhận hàng</Text>
+                    <Text style={styles.paymentMethodSub}>Thanh toán trực tiếp tại quầy cửa hàng</Text>
+                  </View>
+                  <Ionicons
+                    name={paymentMethod === 'COD' ? 'radio-button-on' : 'radio-button-off'}
+                    size={20}
+                    color={paymentMethod === 'COD' ? colors.primary : colors.textMuted}
+                  />
+                </Pressable>
+              </View>
+
+              <Pressable
+                style={styles.autoPayToggle}
+                onPress={() => setAutoPay(!autoPay)}
+              >
+                <Ionicons
+                  name={autoPay ? 'checkbox' : 'square-outline'}
+                  size={22}
+                  color={autoPay ? colors.eco : colors.textMuted}
+                />
+                <Text style={styles.autoPayText}>
+                  Tự động mô phỏng thanh toán thành công ngay khi bấm Đặt hàng
+                </Text>
+              </Pressable>
             </View>
 
             <View style={styles.notice}>
@@ -727,5 +860,61 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 20,
     textAlign: 'center',
+  },
+  paymentMethodsList: {
+    gap: spacing.sm,
+  },
+  paymentMethodItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    padding: spacing.md,
+    borderRadius: radius.md,
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  paymentMethodActive: {
+    borderColor: colors.primary,
+    backgroundColor: colors.surfaceMuted,
+  },
+  paymentMethodIconCircle: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paymentMethodIconText: {
+    color: colors.white,
+    fontSize: 18,
+    fontWeight: '900',
+  },
+  paymentMethodInfo: {
+    flex: 1,
+  },
+  paymentMethodTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: colors.text,
+  },
+  paymentMethodSub: {
+    fontSize: 12,
+    color: colors.textSecondary,
+    marginTop: 2,
+  },
+  autoPayToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    paddingTop: spacing.sm,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+  },
+  autoPayText: {
+    flex: 1,
+    fontSize: 13,
+    fontWeight: '600',
+    color: colors.text,
   },
 });

@@ -80,7 +80,7 @@ var connectionString = builder.Configuration
 
 builder.Services.AddDbContext<SaviBiteDbContext>(options =>
 {
-    options.UseSqlServer(connectionString);
+    options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention();
 });
 
 #endregion
@@ -178,6 +178,28 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+
+
+
+
+
+
+// Auto apply migrations on startup (Neon / Cloud PostgreSQL)
+using (var migrationScope = app.Services.CreateScope())
+{
+    var dbContext = migrationScope.ServiceProvider.GetRequiredService<SaviBiteDbContext>();
+    try
+    {
+        dbContext.Database.Migrate();
+        Console.WriteLine("[DB MIGRATION] CSDL da duoc cap nhat thanh cong tren Neon.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[DB MIGRATION ERROR] {ex.Message}");
+    }
+}
+
+
 #region 11 - DEVELOPMENT DATASET V4 CONFIGURATION
 
 // ======================================================
@@ -253,8 +275,7 @@ if (runDevelopmentSeeder)
 
     if (!string.Equals(
         databaseName,
-        "SaviBiteAuthDev",
-        StringComparison.OrdinalIgnoreCase))
+        "SaviBiteAuthDev", StringComparison.OrdinalIgnoreCase) && !string.Equals(databaseName, "neondb", StringComparison.OrdinalIgnoreCase))
     {
         throw new InvalidOperationException(
             "Seeder V4 chỉ được chạy trên " +

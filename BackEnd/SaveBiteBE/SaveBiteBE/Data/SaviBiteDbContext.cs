@@ -51,6 +51,12 @@ public class SaviBiteDbContext : DbContext
     public DbSet<RefundPayment> RefundPayments =>
     Set<RefundPayment>();
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+        optionsBuilder.UseSnakeCaseNamingConvention();
+    }
+
     protected override void OnModelCreating(
         ModelBuilder modelBuilder)
     {
@@ -145,5 +151,20 @@ public class SaviBiteDbContext : DbContext
 
         modelBuilder.ApplyConfiguration(
     new RefundPaymentConfiguration());
+
+        // Tự động chuyển toàn bộ Property Name C# sang snake_case cho PostgreSQL
+        foreach (var entity in modelBuilder.Model.GetEntityTypes())
+        {
+            foreach (var property in entity.GetProperties())
+            {
+                var name = property.Name;
+                var snakeCase = System.Text.RegularExpressions.Regex.Replace(
+                    name,
+                    "([a-z0-9])([A-Z])",
+                    "$1_$2"
+                ).ToLowerInvariant();
+                property.SetColumnName(snakeCase);
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 
 import { Ionicons } from '@expo/vector-icons';
 import {
+    Image,
     Pressable,
     StyleSheet,
     Text,
@@ -62,20 +63,30 @@ export default function OfferCard({
         soldOut && styles.soldOut,
       ]}
     >
-      <View style={styles.imagePlaceholder}>
-        <Ionicons
-          name={
-            isFlashSale
-              ? 'restaurant-outline'
-              : 'gift-outline'
-          }
-          size={32}
-          color={colors.textMuted}
-        />
+      <View style={styles.imageContainer}>
+        {offer.imageUrl ? (
+          <Image
+            source={{ uri: offer.imageUrl }}
+            style={styles.cardImage}
+            resizeMode="cover"
+          />
+        ) : (
+          <View style={styles.imagePlaceholder}>
+            <Ionicons
+              name={
+                isFlashSale
+                  ? 'restaurant-outline'
+                  : 'gift-outline'
+              }
+              size={32}
+              color={colors.textMuted}
+            />
 
-        <Text style={styles.imageText}>
-          {isFlashSale ? 'Flash Sale' : 'SaviBite Box'}
-        </Text>
+            <Text style={styles.imageText}>
+              {isFlashSale ? 'Flash Sale' : 'SaviBite Box'}
+            </Text>
+          </View>
+        )}
       </View>
 
       <View style={styles.content}>
@@ -159,7 +170,18 @@ const styles = StyleSheet.create({
   pressed: {
     opacity: 0.88,
   },
-  soldOut: { opacity: 0.65 },
+  soldOut: {
+    opacity: 0.65,
+  },
+  imageContainer: {
+    height: 155,
+    backgroundColor: colors.surfaceMuted,
+    overflow: 'hidden',
+  },
+  cardImage: {
+    width: '100%',
+    height: '100%',
+  },
   imagePlaceholder: {
     height: 155,
     backgroundColor: colors.surfaceMuted,

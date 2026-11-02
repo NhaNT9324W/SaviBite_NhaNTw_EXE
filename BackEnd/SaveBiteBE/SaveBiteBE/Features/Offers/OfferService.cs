@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SaveBiteBE.Data;
 using SaveBiteBE.Entities;
 
@@ -246,7 +246,8 @@ public class OfferService(SaviBiteDbContext db)
                 x.Offer.ShopId,
                 x.Offer.Shop.Name,
                 x.Offer.Shop.Address,
-                x.DistanceKm
+                x.DistanceKm,
+                x.Offer.ImageUrl
             ))
             .ToListAsync(cancellationToken);
 

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace SaveBiteBE.Features.Auth;
 
@@ -25,6 +25,21 @@ public class RefreshRequest
     [Required]
     [StringLength(64, MinimumLength = 64)]
     public string RefreshToken { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// Dữ liệu đăng nhập bằng Google OAuth.
+/// </summary>
+public class GoogleLoginRequest
+{
+    [Required]
+    public string IdToken { get; set; } = string.Empty;
+
+    public string? Email { get; set; }
+
+    public string? FullName { get; set; }
+
+    public string? AvatarUrl { get; set; }
 }
 
 /// <summary>

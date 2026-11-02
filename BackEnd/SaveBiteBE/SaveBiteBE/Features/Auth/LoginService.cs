@@ -1,4 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -300,5 +300,84 @@ public class LoginService(
                 ),
                 cancellationToken
             );
+    }
+
+    /// <summary>
+    /// Đăng nhập hoặc đăng ký tài khoản qua Google OAuth.
+    /// </summary>
+    public async Task<LoginResultDto> GoogleLoginAsync(
+        GoogleLoginRequest request,
+        CancellationToken cancellationToken)
+    {
+        string email = (request.Email ?? string.Empty).Trim().ToLowerInvariant();
+        string name = (request.FullName ?? string.Empty).Trim();
+        string? avatarUrl = request.AvatarUrl;
+
+        // Nếu chưa có email truyền trực tiếp, thử đọc từ token JWT nếu hợp lệ
+        if (string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(request.IdToken))
+        {
+            try
+            {
+                var handler = new JwtSecurityTokenHandler();
+                if (handler.CanReadToken(request.IdToken))
+                {
+                    var jwt = handler.ReadJwtToken(request.IdToken);
+                    email = (jwt.Claims.FirstOrDefault(c => c.Type == "email")?.Value ?? string.Empty).Trim().ToLowerInvariant();
+                    name = jwt.Claims.FirstOrDefault(c => c.Type == "name")?.Value ?? name;
+                    avatarUrl ??= jwt.Claims.FirstOrDefault(c => c.Type == "picture")?.Value;
+                }
+            }
+            catch
+            {
+                // Bỏ qua lỗi parse token định dạng khác
+            }
+        }
+
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            throw new LoginFailure(400, "INVALID_GOOGLE_TOKEN", "Không thể xác định email tài khoản Google.");
+        }
+
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            name = email.Split('@')[0];
+        }
+
+        var user = await db.Users
+            .SingleOrDefaultAsync(x => x.Email == email && x.DeletedAt == null, cancellationToken);
+
+        if (user == null)
+        {
+            var now = DateTime.UtcNow;
+            user = new User
+            {
+                Id = Guid.NewGuid(),
+                Email = email,
+                FullName = name,
+                AvatarUrl = avatarUrl,
+                Phone = "",
+                PasswordHash = passwordHasher.HashPassword(null!, Guid.NewGuid().ToString("N")),
+                SystemRole = "USER",
+                Status = "ACTIVE",
+                CreatedAt = now,
+                UpdatedAt = now
+            };
+
+            db.Users.Add(user);
+        }
+        else
+        {
+            EnsureActive(user);
+            if (!string.IsNullOrWhiteSpace(avatarUrl) && user.AvatarUrl != avatarUrl)
+            {
+                user.AvatarUrl = avatarUrl;
+                user.UpdatedAt = DateTime.UtcNow;
+            }
+        }
+
+        var result = IssueTokens(user);
+        await db.SaveChangesAsync(cancellationToken);
+
+        return result;
     }
 }
